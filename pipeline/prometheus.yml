@@ -1,0 +1,298 @@
+groups:
+
+- name: prometheus-((env))
+  jobs:
+  - terraform-plan-prometheus-((env))
+  - terraform-apply-prometheus-((env))
+  - deploy-prometheus-((env))
+
+resource_types:
+
+- name: terraform
+  type: docker-image
+  source:
+    repository: ljfranklin/terraform-resource
+
+resources:
+
+- name: terraform-prometheus-((env))
+  type: terraform
+  source:
+    storage:
+      bucket: ((terraform_storage_bucket_name))
+      bucket_path: ((terraform_storage_bucket_path))
+      region_name: ((aws_default_region))
+      access_key_id: ((terraform_storage_access_key))
+      secret_access_key: ((terraform_storage_secret_key))
+    vars:
+      access_key: ((aws_access_key))
+      secret_key: ((aws_secret_key))
+    env:
+      AWS_ACCESS_KEY_ID: ((aws_access_key))
+      AWS_DEFAULT_REGION: ((aws_default_region))
+      AWS_SECRET_ACCESS_KEY: ((aws_secret_key))
+
+- name: stack-prometheus-ansible
+  type: git
+  source:
+    uri: https://github.com/cycloid-community-catalog/stack-prometheus
+    branch: master
+    check_every: 2m
+    path: /ansible/
+
+- name: catalog-config-ansible
+  type: git
+  source:
+    uri: ((prometheus_config_git_repository))
+    branch: ((prometheus_config_git_branch))
+    check_every: 2m
+    private_key: ((prometheus_config_git_private_key))
+    path: /ansible/
+
+- name: stack-prometheus-terraform
+  type: git
+  source:
+    uri: https://github.com/cycloid-community-catalog/stack-prometheus
+    branch: master
+    check_every: 2m
+    path: /terraform/
+
+- name: catalog-config-terraform
+  type: git
+  source:
+    uri: ((prometheus_config_git_repository))
+    branch: ((prometheus_config_git_branch))
+    check_every: 2m
+    private_key: ((prometheus_config_git_private_key))
+    path: /terraform/
+
+
+jobs:
+
+  - name: terraform-plan-prometheus-((env))
+    max_in_flight: 1
+    build_logs_to_retain: 10
+    plan:
+      - do:
+        - get: stack-prometheus-terraform
+          trigger: true
+        - get: catalog-config-terraform
+          trigger: true
+
+        - task: merge-catalog-and-config
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: cycloid/busybox
+                tag: latest
+            run:
+              path: /bin/sh
+              args:
+              - -xec
+              - |
+                cp -av catalog/terraform/. merged-catalog/
+                if [ -d "config/${CONFIG_PATH}" ]; then
+                  cp -av config/${CONFIG_PATH}/. merged-catalog/
+                fi
+                echo "############ extract tag for the image : <catalog_id>-<config_id>"
+                echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+            inputs:
+            - name: catalog-config-terraform
+              path: "config"
+            - name: stack-prometheus-terraform
+              path: "catalog"
+            outputs:
+            - name: merged-catalog
+              path: "merged-catalog"
+          params:
+            CONFIG_PATH: terraform/((env))
+
+        - put: terraform-prometheus-((env))
+          params:
+            env_name: prometheus-((env))
+            plan_only: true
+            terraform_source: merged-catalog/
+
+  - name: terraform-apply-prometheus-((env))
+    build_logs_to_retain: 10
+    plan:
+      - do:
+        # Get the PR on the project #
+        - get: stack-prometheus-terraform
+          trigger: false
+          passed:
+            - terraform-plan-prometheus-((env))
+
+        - get: catalog-config-terraform
+          trigger: false
+          passed:
+            - terraform-plan-prometheus-((env))
+
+        - get: terraform-prometheus-((env))
+          trigger: false
+          passed:
+            - terraform-plan-prometheus-((env))
+
+        - task: merge-catalog-and-config
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: cycloid/busybox
+                tag: latest
+            run:
+              path: /bin/sh
+              args:
+              - -xec
+              - |
+                cp -av catalog/terraform/. merged-catalog/
+                if [ -d "config/${CONFIG_PATH}" ]; then
+                  cp -av config/${CONFIG_PATH}/. merged-catalog/
+                fi
+                echo "############ extract tag for the image : <catalog_id>-<config_id>"
+                echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+            inputs:
+            - name: catalog-config-terraform
+              path: "config"
+            - name: stack-prometheus-terraform
+              path: "catalog"
+            outputs:
+            - name: merged-catalog
+              path: "merged-catalog"
+          params:
+            CONFIG_PATH: terraform/((env))
+
+        - put: terraform-prometheus-((env))
+          params:
+            env_name: prometheus-((env))
+            run_plan: true
+            terraform_source: merged-catalog/
+
+
+  - name: deploy-prometheus-((env))
+    build_logs_to_retain: 10
+    plan:
+    - do:
+
+      - get: terraform-prometheus-((env))
+        trigger: true
+        passed:
+          - terraform-apply-prometheus-((env))
+
+      - get: stack-prometheus-ansible
+        trigger: true
+
+      - get: catalog-config-ansible
+        trigger: true
+
+      - task: merge-catalog-and-config
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: cycloid/busybox
+              tag: latest
+          run:
+            path: /bin/sh
+            args:
+            - -xec
+            - |
+              cp -av catalog/ansible/. merged-catalog/
+              if [ -d "config/${CONFIG_PATH}" ]; then
+                cp -av config/${CONFIG_PATH}/. merged-catalog/
+              fi
+              echo "############ extract tag for the image : <catalog_id>-<config_id>"
+              echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+          inputs:
+          - name: catalog-config-ansible
+            path: "config"
+          - name: stack-prometheus-ansible
+            path: "catalog"
+          outputs:
+          - name: merged-catalog
+            path: "merged-catalog"
+        params:
+          CONFIG_PATH: ansible
+
+      - task: extract-terraform-outputs
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: latest
+          run:
+            path: /bin/sh
+            args:
+            - -xec
+            - |
+              cp -av merged-catalog/. ansible-playbook/
+              ruby -ryaml -rjson -e 'puts YAML.dump(JSON.parse(STDIN.read))' < terraform/metadata | tail -n +2 | tee -a ansible-playbook/group_vars/all
+          inputs:
+          - name: merged-catalog
+          - name: terraform-prometheus-((env))
+            path: "terraform"
+          outputs:
+          - name: ansible-playbook-terraform-outputs
+            path: "ansible-playbook"
+
+      - task: run-ansible-galaxy
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: teamidefix/ansible
+              tag: latest
+          run:
+            path: /bin/sh
+            args:
+            - -xec
+            - |
+              cp -av ansible-playbook-terraform-outputs/. ansible-playbook/
+              cd ansible-playbook/ && ansible-galaxy install -r requirements.yml --force --roles-path=roles
+          inputs:
+          - name: ansible-playbook-terraform-outputs
+          outputs:
+          - name: ansible-playbook
+
+      - task: connect-bastion
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: cycloid/busybox
+              tag: latest
+          run:
+            path: /bin/sh
+            args:
+            - -ec
+            - |
+              mkdir -p /root/.ssh
+              echo "((bastion_private_key_pair))" > /root/.ssh/id_rsa
+              chmod 600  /root/.ssh/id_rsa
+              echo ${ANSIBLE_VAULT_PASSWORD} > ansible-playbook/.vault-password
+              set -x
+              rsync -av --delete ansible-playbook/ ${BASTION_URL}:/tmp/cycloid_prometheus_${ENV}/
+
+              # FIXME should we keep those var as env ? or put them in ansible ? NOTE : those variables are required in the pipeline AND ansible. Duplicate info
+              ssh -o StrictHostKeyChecking=no "${BASTION_URL}" "cd /tmp/cycloid_prometheus_${ENV} &&
+                                                                export ANSIBLE_FORCE_COLOR=true &&
+                                                                export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} &&
+                                                                export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} &&
+                                                                ansible-playbook --vault-password-file=.vault-password prometheus.yml -e env=${ENV} --diff"
+          inputs:
+          - name: ansible-playbook
+        params:
+          ENV: ((env))
+          BASTION_URL: ((bastion_url))
+          BASTION_PRIVATE_KEY_PAIR: ((bastion_private_key_pair))
+          ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
+          AWS_ACCESS_KEY_ID: ((prometheus_deploy_bucket_access_key))
+          AWS_SECRET_ACCESS_KEY: ((prometheus_deploy_bucket_secret_access_key))

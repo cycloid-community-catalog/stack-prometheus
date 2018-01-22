@@ -1,0 +1,18 @@
+# Configuration of the CI pipeline
+pipeline:
+  pipeline:
+    path: 'pipeline/prometheus.yml'
+  variables:
+    path: 'pipeline/variables.sample.yml'
+
+# Configuration of ansible for provisionning
+ansible:
+  prometheus:
+    path: 'ansible/environments/prometheus.yml.sample'
+    destination: 'ansible/environments/($ environment $)-prometheus.yml'
+
+# Configuration of terraform to setup the infrastructure    
+terraform:
+  prometheus:
+    path: 'terraform/prometheus.tf.sample'
+    destination: 'terraform/prometheus/($ environment $)/prometheus.tf'

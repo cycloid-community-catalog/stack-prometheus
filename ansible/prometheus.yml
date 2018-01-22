@@ -1,0 +1,70 @@
+---
+
+#
+# Prometheus
+#
+- hosts: tag_role_prometheus:&tag_project_prometheus:&tag_engine_cycloid_io:&tag_env_{{ env }}
+  become: yes
+  serial: 50%
+
+  vars_files:
+    - "environments/default_prometheus.yml"
+    - "environments/{{env}}-prometheus.yml"
+  pre_tasks:
+  # - debug: var=grafana_dashboards_files
+  #   - debug: var=grafana_database_host
+  #   - debug: var=hostvars
+  #   - debug: var=groups
+  #   - fail: msg="stop"
+  roles:
+    # - {role: cycloid.postfix, tags: postfix}
+    # require ses login/pass but install postfix
+    # Install prometheus
+    - {role: geerlingguy.docker, tags: docker}
+    - {role: cycloid.prometheus, path: /opt/prometheus, tags: prometheus}
+    # Monitoring client part
+    - {role: cycloid.telegraf, tags: telegraf}
+    - {role: jdauphant.nginx, tags: nginx}
+
+
+    # - role: cycloid.systemd
+    #   systemd_type: dropin
+    #   systemd_dropin_service_name: "nginx"
+    #   systemd_dropin_name: prometheus-share
+    #   systemd_dropin_priority: "01"
+    #   systemd_dropin_content:
+    #     - "[Unit]"
+    #     - 'After=home-www-...-shared.mount'
+    #     - 'Requires=home-www-...-shared.mount'
+    #   tags: efs
+
+
+
+
+    #
+    # - role: tumf.systemd
+    #   systemd_service_name: "sensu-client"
+    #   systemd_service_Unit_Description: sensu-client
+    #   systemd_service_Unit_After: docker.socket
+    #   systemd_service_Install_WantedBy: multi-user.target
+    #   # `yum...` Installing deps for sensu kubernetes plugin https://github.com/sensu-plugins/sensu-plugins-kubernetes
+    #   # This plugin might be remove from this because it's external check on the API. We are maybe not interested to have X time the same checks
+    #   # using of --pid=host to be able to add checks host process
+    #   # Call directly sensu because the init script run `pgrep -P1 -fl /opt/sensu/bin/sensu-client | grep -v grep | grep -v bash | cut -f1 -d" "` who fail because of `--pid=host`
+    #   # because sensu-client is not child of process id 1
+    #   systemd_service_Service_ExecStart: |-
+    #     /usr/bin/docker run --entrypoint /bin/sh --name sensu-client --net host --pid=host \
+    #     -e "PATH=/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+    #     -e "GEM_PATH=/opt/sensu/embedded/lib/ruby/gems/2.0.0" \
+    #     -v /etc/sensu:/etc/sensu \
+    #     -v /etc/hosts:/etc/hosts \
+    #     -v /etc/hostname:/etc/hostname \
+    #     -v /etc/default:/etc/default \
+    #     -v /etc/kubernetes:/etc/kubernetes \
+    #     -v /etc/etcd:/etc/etcd \
+    #     cycloid/sensu-client \
+    #     -c "/opt/sensu/embedded/bin/ruby /opt/sensu/bin/sensu-client -d /etc/sensu/conf.d -e /etc/sensu/extensions -L warn"
+    #   systemd_service_Service_ExecStop: /usr/bin/docker stop sensu-client
+    #   systemd_service_Service_ExecStopPost: /usr/bin/docker rm -f sensu-client
+    #   systemd_service_Service_Restart: always
+    #   systemd_service_Service_RestartSec: 10
