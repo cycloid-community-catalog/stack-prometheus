@@ -6,7 +6,7 @@ keywords:
   - 'prometheus'
   - 'aws'
 author: 'Cycloid'
-image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-prometheus/blob/master/icon.png'
+image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-prometheus/master/icon.png'
 type: 'stack'
 config:
   # Configuration of the CI pipeline
