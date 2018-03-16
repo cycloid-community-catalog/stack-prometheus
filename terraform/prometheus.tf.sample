@@ -13,7 +13,6 @@ module "prometheus" {
 
   # public_subnets_ids       = ["<public-subnets>"]
   # private_subnets_ids      = ["private-subnets"]
-  # rds_subnet           = "<rds-subnet-id>"
 
   # project = "prometheus"
 

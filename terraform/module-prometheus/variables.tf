@@ -119,10 +119,6 @@ variable "rds_parameters" {
   default = ""
 }
 
-variable "rds_subnet" {
-  default = ""
-}
-
 variable "rds_storage_type" {
   default = "gp2"
 }

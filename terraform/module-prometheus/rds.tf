@@ -48,7 +48,7 @@ resource "aws_db_instance" "grafana" {
   skip_final_snapshot       = "${var.rds_skip_final_snapshot}"
 
   parameter_group_name   = "${var.rds_parameters}"
-  db_subnet_group_name   = "${var.rds_subnet}"
+  db_subnet_group_name   = "${aws_db_subnet_group.rds-subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.rds.id}"]
 
   tags {
@@ -63,7 +63,6 @@ resource "aws_db_instance" "grafana" {
 
 resource "aws_db_subnet_group" "rds-subnet" {
   name        = "engine-cycloid.io_subnet-rds-${var.vpc_id}"
-  count       = "${var.rds_subnet != "" ? 0 : 1}"
   description = "subnet-rds-${var.vpc_id}"
   subnet_ids  = ["${var.private_subnets_ids}"]
 }
