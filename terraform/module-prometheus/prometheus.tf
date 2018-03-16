@@ -16,11 +16,11 @@ resource "aws_security_group" "prometheus" {
   }
 
   tags {
-    engine  = "cycloid.io"
-    Name    = "${var.project}-prometheus-${var.env}"
-    env     = "${var.env}"
-    project = "${var.project}"
-    role    = "prometheus"
+    cycloid.io = "true"
+    Name       = "${var.project}-prometheus-${var.env}"
+    env        = "${var.env}"
+    project    = "${var.project}"
+    role       = "prometheus"
   }
 }
 
@@ -83,11 +83,11 @@ resource "aws_instance" "prometheus" {
   }
 
   tags {
-    engine  = "cycloid.io"
-    Name    = "${var.project}-prometheus-${lookup(var.short_region, var.aws_region)}-${var.env}"
-    env     = "${var.env}"
-    project = "${var.project}"
-    role    = "prometheus"
+    cycloid.io = "true"
+    Name       = "${var.project}-prometheus-${lookup(var.short_region, var.aws_region)}-${var.env}"
+    env        = "${var.env}"
+    project    = "${var.project}"
+    role       = "prometheus"
   }
 }
 

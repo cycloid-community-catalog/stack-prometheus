@@ -19,11 +19,11 @@ resource "aws_security_group" "rds" {
   }
 
   tags {
-    engine  = "cycloid.io"
-    Name    = "${var.project}-rds-${var.env}"
-    env     = "${var.env}"
-    project = "${var.project}"
-    role    = "rds"
+    cycloid.io = "true"
+    Name       = "${var.project}-rds-${var.env}"
+    env        = "${var.env}"
+    project    = "${var.project}"
+    role       = "rds"
   }
 }
 
@@ -52,12 +52,12 @@ resource "aws_db_instance" "grafana" {
   vpc_security_group_ids = ["${aws_security_group.rds.id}"]
 
   tags {
-    engine  = "cycloid.io"
-    Name    = "${var.project}-rds-${lookup(var.short_region, var.aws_region)}-${var.env}"
-    role    = "rds"
-    env     = "${var.env}"
-    project = "${var.project}"
-    type    = "master"
+    cycloid.io = "true"
+    Name       = "${var.project}-rds-${lookup(var.short_region, var.aws_region)}-${var.env}"
+    role       = "rds"
+    env        = "${var.env}"
+    project    = "${var.project}"
+    type       = "master"
   }
 }
 
