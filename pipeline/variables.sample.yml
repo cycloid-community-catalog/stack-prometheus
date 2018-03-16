@@ -35,6 +35,10 @@ bastion_private_key_pair: |-
 # Configuration of the git repository used to configure the stack
 prometheus_config_git_repository: git@github.com:MyUser/config-prometheus.git
 prometheus_config_git_branch: master
+
+prometheus_config_ansible_path: ansible
+prometheus_config_terraform_path: terraform/($ environment $)
+
 prometheus_config_git_private_key: |-
   -----BEGIN RSA PRIVATE KEY-----
   -----END RSA PRIVATE KEY-----

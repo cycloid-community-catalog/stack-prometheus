@@ -1,3 +1,28 @@
+shared:
+
+  # Task : sync and merge with rsync 2 rep. Used to merge stack and config
+  - &merge-stack-and-config
+    platform: linux
+    image_resource:
+      type: docker-image
+      source:
+        repository: cycloid/busybox
+        tag: latest
+    run:
+      path: /bin/sh
+      args:
+      - -xec
+      - |
+        cp -av catalog/${STACK_PATH}/. merged-catalog/
+        if [ -d "config/${CONFIG_PATH}" ]; then
+          cp -av config/${CONFIG_PATH}/. merged-catalog/
+        fi
+        echo "############ extract tag for the image : <catalog_id>-<config_id>"
+        echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+    outputs:
+    - name: merged-catalog
+      path: "merged-catalog"
+
 groups:
 
 - name: prometheus-((env))
@@ -79,35 +104,17 @@ jobs:
         - get: catalog-config-terraform
           trigger: true
 
-        - task: merge-catalog-and-config
+        - task: merge-stack-and-config
           config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: cycloid/busybox
-                tag: latest
-            run:
-              path: /bin/sh
-              args:
-              - -xec
-              - |
-                cp -av catalog/terraform/. merged-catalog/
-                if [ -d "config/${CONFIG_PATH}" ]; then
-                  cp -av config/${CONFIG_PATH}/. merged-catalog/
-                fi
-                echo "############ extract tag for the image : <catalog_id>-<config_id>"
-                echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+            <<: *merge-stack-and-config
             inputs:
             - name: catalog-config-terraform
               path: "config"
             - name: stack-prometheus-terraform
               path: "catalog"
-            outputs:
-            - name: merged-catalog
-              path: "merged-catalog"
           params:
-            CONFIG_PATH: terraform/((env))
+            CONFIG_PATH: ((prometheus_config_terraform_path))
+            STACK_PATH: terraform
 
         - put: terraform-prometheus-((env))
           params:
@@ -135,35 +142,17 @@ jobs:
           passed:
             - terraform-plan-prometheus-((env))
 
-        - task: merge-catalog-and-config
+        - task: merge-stack-and-config
           config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: cycloid/busybox
-                tag: latest
-            run:
-              path: /bin/sh
-              args:
-              - -xec
-              - |
-                cp -av catalog/terraform/. merged-catalog/
-                if [ -d "config/${CONFIG_PATH}" ]; then
-                  cp -av config/${CONFIG_PATH}/. merged-catalog/
-                fi
-                echo "############ extract tag for the image : <catalog_id>-<config_id>"
-                echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+            <<: *merge-stack-and-config
             inputs:
             - name: catalog-config-terraform
               path: "config"
             - name: stack-prometheus-terraform
               path: "catalog"
-            outputs:
-            - name: merged-catalog
-              path: "merged-catalog"
           params:
-            CONFIG_PATH: terraform/((env))
+            CONFIG_PATH: ((prometheus_config_terraform_path))
+            STACK_PATH: terraform
 
         - put: terraform-prometheus-((env))
           params:
@@ -188,35 +177,17 @@ jobs:
       - get: catalog-config-ansible
         trigger: true
 
-      - task: merge-catalog-and-config
+      - task: merge-stack-and-config
         config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: cycloid/busybox
-              tag: latest
-          run:
-            path: /bin/sh
-            args:
-            - -xec
-            - |
-              cp -av catalog/ansible/. merged-catalog/
-              if [ -d "config/${CONFIG_PATH}" ]; then
-                cp -av config/${CONFIG_PATH}/. merged-catalog/
-              fi
-              echo "############ extract tag for the image : <catalog_id>-<config_id>"
-              echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+          <<: *merge-stack-and-config
           inputs:
           - name: catalog-config-ansible
             path: "config"
           - name: stack-prometheus-ansible
             path: "catalog"
-          outputs:
-          - name: merged-catalog
-            path: "merged-catalog"
         params:
-          CONFIG_PATH: ansible
+          CONFIG_PATH: ((prometheus_config_ansible_path))
+          STACK_PATH: ansible
 
       - task: extract-terraform-outputs
         config:
