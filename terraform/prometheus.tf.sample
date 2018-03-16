@@ -5,6 +5,7 @@ variable "rds_password" {
 module "prometheus" {
   source = "module-prometheus"
 
+  keypair_name             = "<key-pair>"
   env                      = "($ environment $)"
   vpc_id                   = "<vpc-id>"
   bastion_sg_allow         = "<bastion-sg>"
