@@ -57,6 +57,10 @@ variable "enable_https" {
 
 ###
 
+variable "debian_ami_name" {
+  default = "debian-stretch-*"
+}
+
 variable "prometheus_disk_size" {
   default = 60
 }

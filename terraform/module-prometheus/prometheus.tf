@@ -60,7 +60,8 @@ resource "aws_security_group_rule" "bastion_to_prometheus_ssh" {
 ###
 
 resource "aws_instance" "prometheus" {
-  ami                         = "${data.aws_ami.debian_jessie.id}"
+  ami = "${data.aws_ami.debian.id}"
+
   # associate_public_ip_address = false
   count                       = 1
   iam_instance_profile        = "${aws_iam_instance_profile.prometheus.name}"
