@@ -77,12 +77,16 @@ variable "prometheus_ebs_optimized" {
   default = false
 }
 
-
 ###
 
 # grafana
 
 ###
+variable "create_rds_database" {
+  description = "**true** create a rds database generaly used for grafana. **false** will not create the database"
+  default     = "true"
+}
+
 variable "rds_database" {
   default = "grafana"
 }

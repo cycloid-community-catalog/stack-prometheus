@@ -1,6 +1,6 @@
-variable "rds_password" {
-    default = "ChangeMePls"
-}
+#variable "rds_password" {
+#    default = "ChangeMePls"
+#}
 
 module "prometheus" {
   source = "module-prometheus"
@@ -9,13 +9,15 @@ module "prometheus" {
   env                      = "($ environment $)"
   vpc_id                   = "<vpc-id>"
   bastion_sg_allow         = "<bastion-sg>"
-  rds_password             = "${var.rds_password}"
+  # rds_password             = "${var.rds_password}"
 
   # public_subnets_ids       = ["<public-subnets>"]
   # private_subnets_ids      = ["private-subnets"]
 
   # project = "prometheus"
 
+  # If you need to create a rds (for example used for grafana)
+  # create_rds_database  = "true"
   # rds_database         = "grafana"
   # rds_disk_size        = 10
   # rds_multiaz          = false
