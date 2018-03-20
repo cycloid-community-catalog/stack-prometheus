@@ -252,11 +252,8 @@ jobs:
               set -x
               rsync -av --delete ansible-playbook/ ${BASTION_URL}:/tmp/cycloid_prometheus_${ENV}/
 
-              # FIXME should we keep those var as env ? or put them in ansible ? NOTE : those variables are required in the pipeline AND ansible. Duplicate info
               ssh -o StrictHostKeyChecking=no "${BASTION_URL}" "cd /tmp/cycloid_prometheus_${ENV} &&
                                                                 export ANSIBLE_FORCE_COLOR=true &&
-                                                                export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} &&
-                                                                export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} &&
                                                                 ansible-playbook --vault-password-file=.vault-password prometheus.yml -e env=${ENV} --diff"
           inputs:
           - name: ansible-playbook
@@ -265,5 +262,3 @@ jobs:
           BASTION_URL: ((bastion_url))
           BASTION_PRIVATE_KEY_PAIR: ((bastion_private_key_pair))
           ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
-          AWS_ACCESS_KEY_ID: ((prometheus_deploy_bucket_access_key))
-          AWS_SECRET_ACCESS_KEY: ((prometheus_deploy_bucket_secret_access_key))
