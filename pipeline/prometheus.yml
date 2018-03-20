@@ -61,7 +61,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-prometheus
-    branch: master
+    branch: ((prometheus_stack_git_branch))
     check_every: 2m
     path: /ansible/
 
@@ -78,7 +78,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cycloid-community-catalog/stack-prometheus
-    branch: master
+    branch: ((prometheus_stack_git_branch))
     check_every: 2m
     path: /terraform/
 

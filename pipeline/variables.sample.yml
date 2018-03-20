@@ -32,6 +32,9 @@ bastion_private_key_pair: |-
 # Repos
 #
 
+# If you need to use a specific branch of prometheus-stack
+prometheus_stack_git_branch: master
+
 # Configuration of the git repository used to configure the stack
 prometheus_config_git_repository: git@github.com:MyUser/config-prometheus.git
 prometheus_config_git_branch: master
