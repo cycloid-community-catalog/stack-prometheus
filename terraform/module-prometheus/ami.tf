@@ -1,5 +1,5 @@
 data "aws_ami" "debian" {
-  most_recent = false
+  most_recent = true
 
   filter {
     name   = "name"

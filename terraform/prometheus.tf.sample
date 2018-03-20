@@ -1,5 +1,12 @@
+
+# This variable can be uncomment to be able to give the password from the pipeline
 #variable "rds_password" {
 #    default = "ChangeMePls"
+#}
+
+# This output can be use by the pipeline to generate a variable used in ansible (extract-terraform-outputs)
+#output "rds_password" {
+#  value = "${var.rds_password}"
 #}
 
 module "prometheus" {

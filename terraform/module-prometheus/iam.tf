@@ -44,7 +44,7 @@ resource "aws_iam_policy" "ec2-prometheus-sd" {
 
 # Create IAM Role for prometheus
 resource "aws_iam_role" "prometheus" {
-  name               = "engine-cycloid-prometheus-${var.project}-${var.env}"
+  name               = "engine-cycloid-${var.project}-${var.env}"
   assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
   path               = "/${var.project}/"
 }

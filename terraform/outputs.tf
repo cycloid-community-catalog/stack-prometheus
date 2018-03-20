@@ -14,10 +14,6 @@ output "rds_username" {
   value = "${module.prometheus.rds_username}"
 }
 
-output "rds_password" {
-  value = "${var.rds_password}"
-}
-
 output "rds_database" {
   value = "${module.prometheus.rds_database}"
 }

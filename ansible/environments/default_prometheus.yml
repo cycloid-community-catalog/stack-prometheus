@@ -26,6 +26,21 @@ default_ec2_region: eu-west-1
 #
 # Nginx
 #
+
+# Use ssl on prometheus stack
+prometheus_ssl: false
+
+prometheus_certificat_name: prometheus.crt
+prometheus_certificat_key_name: prometheus.key
+alertmanager_certificat_name: "{{ prometheus_certificat_name }}"
+alertmanager_certificat_key_name: "{{ prometheus_certificat_key_name }}"
+grafana_certificat_name: "{{ prometheus_certificat_name }}"
+grafana_certificat_key_name: "{{ prometheus_certificat_key_name }}"
+
+certificats_src: "{{ playbook_dir }}/files/nginx/ssl/*"
+certificats_dest: "/etc/nginx/ssl/"
+
+
 nginx_auth_basic_files:
   # Default : prometheus / prometheus -> prometheus:$apr1$V0rOBZTd$xErJ7mzWne9Dx3mFtUIUl0
   prometheus:
@@ -56,7 +71,7 @@ nginx_configs:
 nginx_remove_sites:
   - default
 
-nginx_sites:
+nginx_sites_default:
   00-status:
     - listen 80
     - server_name 127.0.0.1
@@ -101,33 +116,66 @@ nginx_sites:
         proxy_set_header   X-FORWARDED_PORT 80;
       }
 
-  # 10-force-https:
-  #   - listen 80 default_server
-  #   - return 301 https://$server_name$request_uri
-  # 12-prometheus-443:
-  #   - listen 443 ssl
-  #   - server_name {{prometheus_domain_name}}
-  #   - ssl_certificate  /etc/nginx/ssl/cycloid.crt
-  #   - ssl_certificate_key /etc/nginx/ssl/cycloid.io.key
-  #   - auth_basic            "Restricted"
-  #   - auth_basic_user_file  auth_basic/prometheus
-  #   - location / {
-  #       proxy_pass http://127.0.0.1:9090;
-  #       proxy_set_header   X-FORWARDED_PROTO https;
-  #       proxy_set_header   X-FORWARDED_PORT 443;
-  #     }
-  # 13-alertmanager-443:
-  #   - listen 443 ssl
-  #   - server_name {{alertmanager_domain_name}}
-  #   - ssl_certificate  /etc/nginx/ssl/cycloid.crt
-  #   - ssl_certificate_key /etc/nginx/ssl/cycloid.io.key
-  #   - auth_basic            "Restricted"
-  #   - auth_basic_user_file  auth_basic/alertmanager
-  #   - location / {
-  #       proxy_pass http://127.0.0.1:9093;
-  #       proxy_set_header   X-FORWARDED_PROTO https;
-  #       proxy_set_header   X-FORWARDED_PORT 443;
-  #     }
+
+
+nginx_sites_default_https:
+  00-status:
+    - listen 80
+    - server_name 127.0.0.1
+    - location / {
+       deny all;
+      }
+    - location /nginx_status {
+        stub_status on;
+        access_log   off;
+        allow 127.0.0.1;
+        deny all;
+      }
+
+  07-grafana-443:
+    - listen 443 ssl
+    - server_name {{grafana_domain_name}}
+    - ssl_certificate  {{ certificats_dest }}/{{ grafana_certificat_name }}
+    - ssl_certificate_key {{ certificats_dest }}/{{ grafana_certificat_key_name }}
+
+    # - auth_basic            "Restricted"
+    # - auth_basic_user_file  auth_basic/grafana
+    - location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header   X-FORWARDED_PROTO http;
+        proxy_set_header   X-FORWARDED_PORT 80;
+      }
+
+  10-force-https:
+     - listen 80 default_server
+     - return 301 https://$server_name$request_uri
+  12-prometheus-443:
+     - listen 443 ssl
+     - server_name {{prometheus_domain_name}}
+     - ssl_certificate  {{ certificats_dest }}/{{ prometheus_certificat_name }}
+     - ssl_certificate_key {{ certificats_dest }}/{{ prometheus_certificat_key_name }}
+     - auth_basic            "Restricted"
+     - auth_basic_user_file  auth_basic/prometheus
+     - location / {
+         proxy_pass http://127.0.0.1:9090;
+         proxy_set_header   X-FORWARDED_PROTO https;
+         proxy_set_header   X-FORWARDED_PORT 443;
+       }
+  13-alertmanager-443:
+     - listen 443 ssl
+     - server_name {{alertmanager_domain_name}}
+     - ssl_certificate  {{ certificats_dest }}/{{ alertmanager_certificat_name }}
+     - ssl_certificate_key {{ certificats_dest }}/{{ alertmanager_certificat_key_name }}
+     - auth_basic            "Restricted"
+     - auth_basic_user_file  auth_basic/alertmanager
+     - location / {
+         proxy_pass http://127.0.0.1:9093;
+         proxy_set_header   X-FORWARDED_PROTO https;
+         proxy_set_header   X-FORWARDED_PORT 443;
+       }
+
+
+nginx_sites: "{% if prometheus_ssl == 'false' %}{{ nginx_sites_default }}{% else %}{{ nginx_sites_default_https }}{% endif %}"
 
 
 #

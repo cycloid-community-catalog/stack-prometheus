@@ -16,6 +16,26 @@
   #   - debug: var=hostvars
   #   - debug: var=groups
   #   - fail: msg="stop"
+
+
+    - name: "Create ssl directory"
+      file:
+        path: "{{ certificats_dest }}"
+        state: directory
+      when: prometheus_ssl | bool
+
+    - name: "Install ssl certificat"
+      copy:
+        src: "{{ item }}"
+        dest: "{{ certificats_src }}"
+        mode: 0600
+      with_fileglob:
+        - "{{ certificats_path }}"
+      when: prometheus_ssl | bool
+
+
+
+
   roles:
     # - {role: cycloid.postfix, tags: postfix}
     # require ses login/pass but install postfix
