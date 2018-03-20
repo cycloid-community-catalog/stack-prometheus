@@ -22,7 +22,7 @@ variable "short_region" {
 }
 
 variable "zones" {
-  type = "list"
+  type    = "list"
   default = []
 }
 
@@ -31,12 +31,12 @@ variable "keypair_name" {
 }
 
 variable "private_subnets_ids" {
-  type = "list"
+  type    = "list"
   default = [""]
 }
 
 variable "public_subnets_ids" {
-    type = "list"
+  type = "list"
 }
 
 variable "vpc_id" {
