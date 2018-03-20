@@ -1,5 +1,5 @@
 env: ($ environment $)
-
+project: prometheus
 #
 # Terraform
 #

@@ -25,7 +25,7 @@ shared:
 
 groups:
 
-- name: prometheus-((env))
+- name: ((project))-((env))
   jobs:
   - terraform-plan-prometheus-((env))
   - terraform-apply-prometheus-((env))
