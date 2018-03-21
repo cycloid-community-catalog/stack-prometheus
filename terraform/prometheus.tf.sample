@@ -9,6 +9,11 @@
 #  value = "${var.rds_password}"
 #}
 
+
+variable "project" {
+    default = "prometheus"
+}
+
 module "prometheus" {
   source = "module-prometheus"
 
@@ -21,7 +26,7 @@ module "prometheus" {
   # public_subnets_ids       = ["<public-subnets>"]
   # private_subnets_ids      = ["private-subnets"]
 
-  # project = "prometheus"
+  # project = "${var.project}"
 
   # If you need to create a rds (for example used for grafana)
   # create_rds_database  = "true"

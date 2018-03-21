@@ -254,7 +254,7 @@ jobs:
 
               ssh -o StrictHostKeyChecking=no "${BASTION_URL}" "cd /tmp/cycloid_prometheus_${ENV} &&
                                                                 export ANSIBLE_FORCE_COLOR=true &&
-                                                                ansible-playbook --vault-password-file=.vault-password prometheus.yml -e env=${ENV} --diff"
+                                                                ansible-playbook --vault-password-file=.vault-password prometheus.yml -e env=${ENV} ${ANSIBLE_ARGS} --diff"
           inputs:
           - name: ansible-playbook
         params:
@@ -262,3 +262,4 @@ jobs:
           BASTION_URL: ((bastion_url))
           BASTION_PRIVATE_KEY_PAIR: ((bastion_private_key_pair))
           ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
+          ANSIBLE_ARGS: "-e project=((project))"
