@@ -27,10 +27,10 @@
     - name: "Install ssl certificat"
       copy:
         src: "{{ item }}"
-        dest: "{{ certificats_src }}"
+        dest: "{{ certificats_dest }}"
         mode: 0600
       with_fileglob:
-        - "{{ certificats_path }}"
+        - "{{ certificats_src }}"
       when: prometheus_ssl | bool
 
 

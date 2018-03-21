@@ -10,10 +10,15 @@
 #}
 
 module "prometheus" {
+  #####################################
+  # Do not modify the following lines #
   source = "module-prometheus"
+  project = "${var.project}"
+  env     = "${var.env}"
+  #####################################
+
 
   keypair_name             = "<key-pair>"
-  env                      = "($ environment $)"
   vpc_id                   = "<vpc-id>"
   bastion_sg_allow         = "<bastion-sg>"
   # rds_password             = "${var.rds_password}"
@@ -21,7 +26,6 @@ module "prometheus" {
   # public_subnets_ids       = ["<public-subnets>"]
   # private_subnets_ids      = ["private-subnets"]
 
-  # project = "($ project $)"
 
   # If you need to create a rds (for example used for grafana)
   # create_rds_database  = "true"

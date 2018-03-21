@@ -52,6 +52,8 @@ resources:
     vars:
       access_key: ((aws_access_key))
       secret_key: ((aws_secret_key))
+      env: ((env))
+      project: ((project))
     env:
       AWS_ACCESS_KEY_ID: ((aws_access_key))
       AWS_DEFAULT_REGION: ((aws_default_region))
@@ -254,12 +256,12 @@ jobs:
 
               ssh -o StrictHostKeyChecking=no "${BASTION_URL}" "cd /tmp/cycloid_prometheus_${ENV} &&
                                                                 export ANSIBLE_FORCE_COLOR=true &&
-                                                                ansible-playbook --vault-password-file=.vault-password prometheus.yml -e env=${ENV} ${ANSIBLE_ARGS} --diff"
+                                                                ansible-playbook --vault-password-file=.vault-password prometheus.yml -e project=${PROJECT} -e env=${ENV} --diff"
           inputs:
           - name: ansible-playbook
         params:
           ENV: ((env))
+          PROJECT: ((project))
           BASTION_URL: ((bastion_url))
           BASTION_PRIVATE_KEY_PAIR: ((bastion_private_key_pair))
           ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
-          ANSIBLE_ARGS: "-e project=((project))"
