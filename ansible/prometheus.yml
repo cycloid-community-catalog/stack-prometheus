@@ -3,7 +3,7 @@
 #
 # Prometheus
 #
-- hosts: tag_role_prometheus:&tag_project_prometheus:&tag_engine_cycloid_io:&tag_env_{{ env }}
+- hosts: tag_role_prometheus:&tag_project_prometheus:&tag_cycloid_io_true:&tag_env_{{ env }}
   become: yes
   serial: 50%
 
