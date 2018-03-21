@@ -246,7 +246,7 @@ jobs:
             - -ec
             - |
               mkdir -p /root/.ssh
-              echo "((bastion_private_key_pair))" > /root/.ssh/id_rsa
+              echo "${BASTION_PRIVATE_KEY_PAIR}" > /root/.ssh/id_rsa
               chmod 600  /root/.ssh/id_rsa
               echo ${ANSIBLE_VAULT_PASSWORD} > ansible-playbook/.vault-password
               set -x
