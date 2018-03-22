@@ -273,17 +273,7 @@ prometheus_telegraf_rules_config:
 #     - targets:
 #       - "myalertmanager.com"
 
-prometheus_scrape_configs:
-
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-    metric_relabel_configs:
-    # Not store unwanted metrics
-    - source_labels: [__name__]
-      action: drop
-      regex: go_(.*)
-
+prometheus_scrape_configs_telegraph:
   - job_name: 'alertmanager'
     static_configs:
       - targets: ['{{ ansible_default_ipv4.address }}:9093']
@@ -299,6 +289,17 @@ prometheus_scrape_configs:
       action: replace
       target_label: instance
 
+
+prometheus_scrape_configs_global:
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    metric_relabel_configs:
+    # Not store unwanted metrics
+    - source_labels: [__name__]
+      action: drop
+      regex: go_(.*)
 
   - job_name: 'telegraf via EC2 service discovery'
     scheme: http
@@ -320,6 +321,7 @@ prometheus_scrape_configs:
     # - source_labels: [__meta_ec2_tag_client, __meta_ec2_tag_project]
     #   action: drop
     #   regex: cycloid;kubernetes
+
 
     - source_labels: [__name__]
       action: drop
@@ -362,6 +364,10 @@ prometheus_scrape_configs:
       target_label: client
     - source_labels: [__meta_ec2_availability_zone]
       target_label: availability_zone
+
+
+# merge alertmanager if needed
+prometheus_scrape_configs: "{% if install_alertmanager == 'true' %}{{ prometheus_scrape_configs_global + prometheus_scrape_configs_telegraph }}{% else %}{{ prometheus_scrape_configs_global }}{% endif %}"
 
 
 #
