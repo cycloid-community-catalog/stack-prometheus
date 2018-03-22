@@ -322,6 +322,9 @@ prometheus_scrape_configs_global:
     #   action: drop
     #   regex: cycloid;kubernetes
 
+    - source_labels: [__meta_ec2_tag_monitoring_discovery]
+      action: drop
+      regex: false
 
     - source_labels: [__name__]
       action: drop
