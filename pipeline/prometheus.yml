@@ -6,22 +6,31 @@ shared:
     image_resource:
       type: docker-image
       source:
-        repository: cycloid/busybox
+        repository: cycloid/cycloid-toolkit
         tag: latest
     run:
-      path: /bin/sh
-      args:
-      - -xec
-      - |
-        cp -av catalog/${STACK_PATH}/. merged-catalog/
-        if [ -d "config/${CONFIG_PATH}" ]; then
-          cp -av config/${CONFIG_PATH}/. merged-catalog/
-        fi
-        echo "############ extract tag for the image : <catalog_id>-<config_id>"
-        echo "$(git --git-dir=catalog/.git rev-parse --verify HEAD --short)-$(git --git-dir=config/.git rev-parse --verify HEAD --short)" | tee merged-catalog/tag
+      path: /usr/bin/merge-stack-and-config
     outputs:
-    - name: merged-catalog
-      path: "merged-catalog"
+    - name: merged-stack
+      path: "merged-stack"
+
+  # Task : connect on the bastion server and run ansible from it
+  - &run-ansible-from-bastion
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: cycloid/cycloid-toolkit
+          tag: latest
+      run:
+        path: /usr/bin/ansible-runner
+      caches:
+        - path: ansible-playbook/roles
+      inputs:
+      - name: merged-stack
+        path: ansible-playbook
+
 
 groups:
 
@@ -113,7 +122,7 @@ jobs:
             - name: catalog-config-terraform
               path: "config"
             - name: stack-prometheus-terraform
-              path: "catalog"
+              path: "stack"
           params:
             CONFIG_PATH: ((prometheus_config_terraform_path))
             STACK_PATH: terraform
@@ -122,7 +131,7 @@ jobs:
           params:
             env_name: prometheus-((env))
             plan_only: true
-            terraform_source: merged-catalog/
+            terraform_source: merged-stack/
 
   - name: terraform-apply-prometheus-((env))
     build_logs_to_retain: 10
@@ -151,7 +160,7 @@ jobs:
             - name: catalog-config-terraform
               path: "config"
             - name: stack-prometheus-terraform
-              path: "catalog"
+              path: "stack"
           params:
             CONFIG_PATH: ((prometheus_config_terraform_path))
             STACK_PATH: terraform
@@ -160,7 +169,7 @@ jobs:
           params:
             env_name: prometheus-((env))
             run_plan: true
-            terraform_source: merged-catalog/
+            terraform_source: merged-stack/
 
 
   - name: deploy-prometheus-((env))
@@ -186,82 +195,21 @@ jobs:
           - name: catalog-config-ansible
             path: "config"
           - name: stack-prometheus-ansible
-            path: "catalog"
+            path: "stack"
+          - name: terraform-prometheus-((env))
+            path: "terraform"
         params:
           CONFIG_PATH: ((prometheus_config_ansible_path))
           STACK_PATH: ansible
 
-      - task: extract-terraform-outputs
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: latest
-          run:
-            path: /bin/sh
-            args:
-            - -xec
-            - |
-              cp -av merged-catalog/. ansible-playbook/
-              ruby -ryaml -rjson -e 'puts YAML.dump(JSON.parse(STDIN.read))' < terraform/metadata | tail -n +2 | tee -a ansible-playbook/group_vars/all
-          inputs:
-          - name: merged-catalog
-          - name: terraform-prometheus-((env))
-            path: "terraform"
-          outputs:
-          - name: ansible-playbook-terraform-outputs
-            path: "ansible-playbook"
-
-      - task: run-ansible-galaxy
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: teamidefix/ansible
-              tag: latest
-          run:
-            path: /bin/sh
-            args:
-            - -xec
-            - |
-              cp -av ansible-playbook-terraform-outputs/. ansible-playbook/
-              cd ansible-playbook/ && ansible-galaxy install -r requirements.yml --force --roles-path=roles
-          inputs:
-          - name: ansible-playbook-terraform-outputs
-          outputs:
-          - name: ansible-playbook
-
-      - task: connect-bastion
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: cycloid/busybox
-              tag: latest
-          run:
-            path: /bin/sh
-            args:
-            - -ec
-            - |
-              mkdir -p /root/.ssh
-              echo "${BASTION_PRIVATE_KEY_PAIR}" > /root/.ssh/id_rsa
-              chmod 600  /root/.ssh/id_rsa
-              echo ${ANSIBLE_VAULT_PASSWORD} > ansible-playbook/.vault-password
-              set -x
-              rsync -av --delete ansible-playbook/ ${BASTION_URL}:/tmp/cycloid_prometheus_${ENV}/
-
-              ssh -o StrictHostKeyChecking=no "${BASTION_URL}" "cd /tmp/cycloid_prometheus_${ENV} &&
-                                                                export ANSIBLE_FORCE_COLOR=true &&
-                                                                ansible-playbook --vault-password-file=.vault-password prometheus.yml -e project=${PROJECT} -e env=${ENV} --diff"
-          inputs:
-          - name: ansible-playbook
+      - task: run-ansible
+        <<: *run-ansible-from-bastion
         params:
-          ENV: ((env))
-          PROJECT: ((project))
           BASTION_URL: ((bastion_url))
-          BASTION_PRIVATE_KEY_PAIR: ((bastion_private_key_pair))
+          BASTION_PRIVATE_KEY: ((bastion_private_key_pair))
           ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
+          ANSIBLE_PLAYBOOK_PATH: ansible-playbook
+          ANSIBLE_PLAYBOOK_NAME: prometheus.yml
+          EXTRA_VARS:
+            env: ((env))
+            project: ((project))

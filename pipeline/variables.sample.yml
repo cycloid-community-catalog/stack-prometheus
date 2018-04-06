@@ -1,12 +1,14 @@
 env: ($ environment $)
-project: prometheus
+project: ($ project $)
+customer: ($ organization_canonical $)
+
 #
 # Terraform
 #
 
 # Amazon access to use to run terraform. Usually admin account to be able to create Amazon services.
-aws_access_key: ...
-aws_secret_key: ...
+aws_access_key: ((aws.access_key))
+aws_secret_key: ((aws.secret_key))
 aws_default_region: eu-west-1
 
 # Bucket configuration to store terraform remote state file.
@@ -20,13 +22,11 @@ terraform_storage_bucket_path: prometheus/($ environment $)
 #
 
 # Password used for your ansible vault variables.
-ansible_vault_password: ...
+ansible_vault_password: ((raw_ansible_vault_password))
 
 # Configuration of the bastion server used to run ansible
 bastion_url: admin@bastion.cycloid.io
-bastion_private_key_pair: |-
-  -----BEGIN RSA PRIVATE KEY-----
-  -----END RSA PRIVATE KEY-----
+bastion_private_key_pair: ((ssh_bastion.ssh_key))
 
 #
 # Repos
@@ -42,6 +42,4 @@ prometheus_config_git_branch: master
 prometheus_config_ansible_path: ansible
 prometheus_config_terraform_path: terraform/($ environment $)
 
-prometheus_config_git_private_key: |-
-  -----BEGIN RSA PRIVATE KEY-----
-  -----END RSA PRIVATE KEY-----
+prometheus_config_git_private_key: ((git_prometheus_config.ssh_key))
