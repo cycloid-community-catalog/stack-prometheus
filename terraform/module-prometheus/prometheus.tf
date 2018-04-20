@@ -10,9 +10,9 @@ resource "aws_security_group" "prometheus" {
   vpc_id      = "${var.vpc_id}"
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
   }
 
   tags {
@@ -25,22 +25,22 @@ resource "aws_security_group" "prometheus" {
 }
 
 resource "aws_security_group_rule" "any_to_http" {
-  type                     = "ingress"
-  from_port                = "80"
-  to_port                  = "80"
-  protocol                 = "tcp"
-  cidr_blocks              = ["0.0.0.0/0"]
-  security_group_id        = "${aws_security_group.prometheus.id}"
+  type              = "ingress"
+  from_port         = "80"
+  to_port           = "80"
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.prometheus.id}"
 }
 
 resource "aws_security_group_rule" "any_to_https" {
-  count                    = "${var.enable_https ? 1 : 0}"
-  type                     = "ingress"
-  from_port                = "443"
-  to_port                  = "443"
-  protocol                 = "tcp"
-  cidr_blocks              = ["0.0.0.0/0"]
-  security_group_id        = "${aws_security_group.prometheus.id}"
+  count             = "${var.enable_https ? 1 : 0}"
+  type              = "ingress"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.prometheus.id}"
 }
 
 resource "aws_security_group_rule" "bastion_to_prometheus_ssh" {
@@ -60,13 +60,14 @@ resource "aws_security_group_rule" "bastion_to_prometheus_ssh" {
 ###
 
 resource "aws_instance" "prometheus" {
-  ami                         = "${data.aws_ami.debian_jessie.id}"
+  ami = "${data.aws_ami.debian.id}"
+
   # associate_public_ip_address = false
-  count                       = 1
-  iam_instance_profile        = "${aws_iam_instance_profile.prometheus.name}"
-  instance_type               = "${var.prometheus_type}"
-  key_name                    = "${var.keypair_name}"
-  ebs_optimized               = "${var.prometheus_ebs_optimized}"
+  count                = 1
+  iam_instance_profile = "${aws_iam_instance_profile.prometheus.name}"
+  instance_type        = "${var.prometheus_type}"
+  key_name             = "${var.keypair_name}"
+  ebs_optimized        = "${var.prometheus_ebs_optimized}"
 
   vpc_security_group_ids = ["${compact(list(
     "${var.bastion_sg_allow}",
@@ -91,7 +92,6 @@ resource "aws_instance" "prometheus" {
   }
 }
 
-
 ###
 
 # EIP
@@ -102,7 +102,6 @@ resource "aws_eip" "prometheus" {
   instance = "${aws_instance.prometheus.id}"
   vpc      = true
 }
-
 
 ###
 
@@ -127,5 +126,4 @@ resource "aws_cloudwatch_metric_alarm" "recover-prometheus" {
   period                    = "60"
   statistic                 = "Average"
   threshold                 = "0"
-
 }

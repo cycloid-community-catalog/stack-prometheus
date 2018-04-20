@@ -22,7 +22,7 @@ variable "short_region" {
 }
 
 variable "zones" {
-  type = "list"
+  type    = "list"
   default = []
 }
 
@@ -31,12 +31,12 @@ variable "keypair_name" {
 }
 
 variable "private_subnets_ids" {
-  type = "list"
+  type    = "list"
   default = [""]
 }
 
 variable "public_subnets_ids" {
-    type = "list"
+  type = "list"
 }
 
 variable "vpc_id" {
@@ -57,6 +57,10 @@ variable "enable_https" {
 
 ###
 
+variable "debian_ami_name" {
+  default = "debian-stretch-*"
+}
+
 variable "prometheus_disk_size" {
   default = 60
 }
@@ -73,12 +77,16 @@ variable "prometheus_ebs_optimized" {
   default = false
 }
 
-
 ###
 
 # grafana
 
 ###
+variable "create_rds_database" {
+  description = "**true** create a rds database generaly used for grafana. **false** will not create the database"
+  default     = "true"
+}
+
 variable "rds_database" {
   default = "grafana"
 }

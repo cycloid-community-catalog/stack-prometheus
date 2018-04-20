@@ -23,13 +23,14 @@ data "aws_iam_policy_document" "ec2-prometheus-sd" {
   statement {
     actions = [
       "ec2:DescribeTags",
-      "ec2:DescribeInstances"
+      "ec2:DescribeInstances",
     ]
 
     effect    = "Allow"
     resources = ["*"]
   }
 }
+
 resource "aws_iam_policy" "ec2-prometheus-sd" {
   name        = "${var.env}-${var.project}-ec2-prometheus-sd"
   path        = "/"
@@ -37,14 +38,13 @@ resource "aws_iam_policy" "ec2-prometheus-sd" {
   policy      = "${data.aws_iam_policy_document.ec2-prometheus-sd.json}"
 }
 
-
 #
 # Profile
 #
 
 # Create IAM Role for prometheus
 resource "aws_iam_role" "prometheus" {
-  name = "engine-cycloid-prometheus-${var.project}-${var.env}"
+  name               = "engine-cycloid-${var.project}-${var.env}"
   assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
   path               = "/${var.project}/"
 }
@@ -54,7 +54,6 @@ resource "aws_iam_instance_profile" "prometheus" {
   name = "engine-cycloid-prometheus-${var.project}-${var.env}"
   role = "${aws_iam_role.prometheus.name}"
 }
-
 
 #
 # Policy attachment

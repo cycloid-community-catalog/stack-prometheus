@@ -1,21 +1,34 @@
-variable "rds_password" {
-    default = "ChangeMePls"
-}
+
+# This variable can be uncomment to be able to give the password from the pipeline
+#variable "rds_password" {
+#    default = "ChangeMePls"
+#}
+
+# This output can be use by the pipeline to generate a variable used in ansible (extract-terraform-outputs)
+#output "rds_password" {
+#  value = "${var.rds_password}"
+#}
 
 module "prometheus" {
+  #####################################
+  # Do not modify the following lines #
   source = "module-prometheus"
+  project = "${var.project}"
+  env     = "${var.env}"
+  #####################################
+
 
   keypair_name             = "<key-pair>"
-  env                      = "($ environment $)"
   vpc_id                   = "<vpc-id>"
   bastion_sg_allow         = "<bastion-sg>"
-  rds_password             = "${var.rds_password}"
+  # rds_password             = "${var.rds_password}"
 
   # public_subnets_ids       = ["<public-subnets>"]
   # private_subnets_ids      = ["private-subnets"]
 
-  # project = "prometheus"
 
+  # If you need to create a rds (for example used for grafana)
+  # create_rds_database  = "true"
   # rds_database         = "grafana"
   # rds_disk_size        = 10
   # rds_multiaz          = false

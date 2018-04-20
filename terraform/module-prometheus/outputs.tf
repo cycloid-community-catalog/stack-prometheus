@@ -12,33 +12,32 @@
 #    value = "${join(",", aws_instance.prometheus.*.private_ip)}"
 #}
 
-
 output "prometheus_eip" {
-    value = "${aws_eip.prometheus.public_ip}"
+  value = "${aws_eip.prometheus.public_ip}"
 }
-
 
 output "prometheus_secgroup_id" {
-    value = "${aws_security_group.prometheus.id}"
+  value = "${aws_security_group.prometheus.id}"
 }
 
-
+# workaround to handle count = 0 on output
+# https://github.com/hashicorp/terraform/issues/16726
 output "rds_address" {
-    value = "${aws_db_instance.grafana.address}"
+  value = "${element(concat(aws_db_instance.grafana.*.address, list("")), 0)}"
 }
 
 output "rds_port" {
-    value = "${aws_db_instance.grafana.port}"
+  value = "${element(concat(aws_db_instance.grafana.*.port, list("")), 0)}"
 }
 
 output "rds_database" {
-    value = "${aws_db_instance.grafana.name}"
+  value = "${element(concat(aws_db_instance.grafana.*.name, list("")), 0)}"
 }
 
 output "rds_username" {
-    value = "${aws_db_instance.grafana.username}"
+  value = "${element(concat(aws_db_instance.grafana.*.username, list("")), 0)}"
 }
 
 output "rds_engine" {
-    value = "${aws_db_instance.grafana.engine}"
+  value = "${element(concat(aws_db_instance.grafana.*.engine, list("")), 0)}"
 }
