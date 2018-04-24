@@ -39,3 +39,8 @@ def test_nginx_vhosts(host):
 
     assert '<title>Prometheus' in prometheus['content']
     assert '<title>Grafana' in grafana['content']
+
+def test_prometheus_rules(host):
+    assert host.file("/opt/prometheus/prometheus-data/telegraf.rules").contains('- alert: MemoryUsage')
+    assert host.file("/opt/prometheus/prometheus-data/telegraf.rules").contains('- alert: CPUUsageDev')
+    assert host.file("/opt/prometheus/prometheus-data/telegraf.rules").contains('- alert: CPUUsageProd')

@@ -14,23 +14,26 @@ lint:
 platforms:
   - name: instance
     #image: docker:dind
-    image: debian:jessie
+    image: debian:stretch
     published_ports:
       - "9090:9090"
       - "9093:9093"
       - "3000:3000"
     privileged: yes
-    command: sh -c 'while sleep 3600; do :; done'
+    # Adding some rm of systemctl because ansible try to use it by default in the container.
+    command: sh -c 'rm -f /bin/systemctl /sbin/initctl ; while sleep 3600; do :; done'
     groups:
+     - tag_project_prometheus
      - tag_role_prometheus
      - tag_project_prometheus
-     - tag_engine_cycloid_io
+     - tag_cycloid_io_true
      - tag_env_test
 
 provisioner:
   name: ansible
   env:
     MOLECULE_DEBUG: "true"
+    #ANSIBLE_KEEP_REMOTE_FILES: "1"
   lint:
     name: ansible-lint
   playbooks:
@@ -39,6 +42,7 @@ provisioner:
     # vault-password-file: ../../.vault-password
     extra-vars:
       env=test
+      project=prometheus
     #skip-tags: deploy
     # vvv: "True"
 
