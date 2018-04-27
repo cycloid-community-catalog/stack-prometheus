@@ -210,6 +210,8 @@ jobs:
           ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
           ANSIBLE_PLAYBOOK_PATH: ansible-playbook
           ANSIBLE_PLAYBOOK_NAME: prometheus.yml
+          AWS_ACCESS_KEY_ID: ((aws_access_key))
+          AWS_SECRET_ACCESS_KEY: ((aws_secret_key))
           EXTRA_VARS:
             env: ((env))
             project: ((project))
