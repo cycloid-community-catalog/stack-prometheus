@@ -175,7 +175,7 @@ nginx_sites_default_https:
        }
 
 
-nginx_sites: "{% if prometheus_ssl == 'false' %}{{ nginx_sites_default }}{% else %}{{ nginx_sites_default_https }}{% endif %}"
+nginx_sites: "{% if not prometheus_ssl %}{{ nginx_sites_default }}{% else %}{{ nginx_sites_default_https }}{% endif %}"
 
 
 #
