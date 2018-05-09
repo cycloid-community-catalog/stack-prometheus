@@ -380,40 +380,40 @@ prometheus_scrape_configs: "{% if install_alertmanager == 'true' %}{{ prometheus
 # See telegraf inputs for more plugings https://github.com/influxdata/telegraf/tree/master/plugins/inputs
 # Like https://github.com/influxdata/telegraf/tree/master/plugins/inputs/net_response for tcp port checks
 telegraf_plugins_extra:
-  - plugin: processes
-  - plugin: kernel
-  - plugin: linux_sysctl_fs
-  - plugin: conntrack
-  - plugin: nginx
+  processes:
+  kernel:
+  linux_sysctl_fs:
+  conntrack:
+  nginx:
     config:
         - urls = ["http://127.0.0.1/nginx_status"]
-  - plugin: exec
-    filename: check-lb-certs
+  check-lb-certs:
+    plugin: exec
     config:
         - commands = ["/usr/bin/check_lb_certs.py"]
         - data_format = "influx"
         - interval = "30m"
-  - plugin: exec
-    filename: check-ses
+  check-ses:
+    plugin: exec
     config:
         - commands = ["/usr/bin/check_ses.py"]
         - data_format = "influx"
         - interval = "10m"
-  - plugin: exec
-    filename: check-instance-events
+  check-instance-events:
+    plugin: exec
     config:
         - commands = ["/usr/bin/check_instance_events.py"]
         - data_format = "influx"
         - interval = "10m"
-  - plugin: exec
-    filename: check-rds-events
+  check-rds-events:
+    plugin: exec
     config:
         - commands = ["/usr/bin/check_rds_events.py"]
         - data_format = "influx"
         - interval = "10m"
   # https://github.com/influxdata/telegraf/tree/master/plugins/inputs/cloudwatch
-  - plugin: cloudwatch
-    filename: cloudwatch_ec2
+  cloudwatch_ec2:
+    plugin: cloudwatch
     config:
         - 'region = "{{ec2_region | default(default_ec2_region) }}"'
         - period = "10m"
@@ -425,8 +425,8 @@ telegraf_plugins_extra:
         -  "[[inputs.cloudwatch.metrics.dimensions]]"
         -   name = "InstanceId"
         -   value = "*"
-  - plugin: cloudwatch
-    filename: cloudwatch_rds
+  cloudwatch_rds:
+    plugin: cloudwatch
     config:
         - 'region = "{{ec2_region | default(default_ec2_region) }}"'
         - period = "10m"
