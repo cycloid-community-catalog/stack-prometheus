@@ -380,8 +380,6 @@ prometheus_scrape_configs: "{% if install_alertmanager == 'true' %}{{ prometheus
 # See telegraf inputs for more plugings https://github.com/influxdata/telegraf/tree/master/plugins/inputs
 # Like https://github.com/influxdata/telegraf/tree/master/plugins/inputs/net_response for tcp port checks
 telegraf_plugins_extra:
-  processes:
-  kernel:
   linux_sysctl_fs:
   conntrack:
   nginx:
