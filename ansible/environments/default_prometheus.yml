@@ -259,9 +259,6 @@ prometheus_rule_files:
   # Provide my own local rules
   #- '{{playbook_dir}}/templates/*.rules'
 
-prometheus_telegraf_rules_config:
-  receiver: default
-
 # Example of alertmanager override config
 # prometheus_alerting:
 #   alertmanagers:
