@@ -38,6 +38,25 @@ resource "aws_iam_policy" "ec2-prometheus-sd" {
   policy      = "${data.aws_iam_policy_document.ec2-prometheus-sd.json}"
 }
 
+# policies for check (like rds_event, ses, instance events ...)
+data "aws_iam_policy_document" "ec2-prometheus-checks" {
+  statement {
+    actions = [
+      "cloudwatch:ListMetrics",
+    ]
+
+    effect    = "Allow"
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "ec2-prometheus-checks" {
+  name        = "${var.env}-${var.project}-ec2-prometheus-checks"
+  path        = "/"
+  description = "Allow prometheus to get datas for checks"
+  policy      = "${data.aws_iam_policy_document.ec2-prometheus-checks.json}"
+}
+
 #
 # Profile
 #
@@ -63,4 +82,10 @@ resource "aws_iam_policy_attachment" "ec2-prometheus-sd" {
   name       = "${var.env}-${var.project}-ec2-prometheus-sd"
   roles      = ["${aws_iam_role.prometheus.name}"]
   policy_arn = "${aws_iam_policy.ec2-prometheus-sd.arn}"
+}
+
+resource "aws_iam_policy_attachment" "ec2-prometheus-checks" {
+  name       = "${var.env}-${var.project}-ec2-prometheus-checks"
+  roles      = ["${aws_iam_role.prometheus.name}"]
+  policy_arn = "${aws_iam_policy.ec2-prometheus-checks.arn}"
 }
