@@ -5,6 +5,7 @@ variable "aws_region" {
 variable "bastion_sg_allow" {}
 
 variable "env" {}
+variable "customer" {}
 
 variable "short_region" {
   default = {

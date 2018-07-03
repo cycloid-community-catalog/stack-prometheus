@@ -12,9 +12,10 @@
 module "prometheus" {
   #####################################
   # Do not modify the following lines #
-  source = "module-prometheus"
-  project = "${var.project}"
-  env     = "${var.env}"
+  source      = "module-prometheus"
+  project     = "${var.project}"
+  env         = "${var.env}"
+  customer    = "${var.customer}"
   #####################################
 
 

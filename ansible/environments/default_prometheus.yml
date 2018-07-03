@@ -1,6 +1,7 @@
 prometheus_domain_name: "prometheus.localhost"
 alertmanager_domain_name: "alertmanager.localhost"
 grafana_domain_name: "grafana.localhost"
+role: prometheus
 
 default_ec2_region: eu-west-1
 
@@ -292,6 +293,13 @@ prometheus_scrape_configs_global:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+        labels:
+          Name: "prometheus"
+          project: "{{ project }}"
+          env: "{{ env }}"
+          role: "{{ role }}"
+          client: "{{ customer }}"
+          customer: "{{ customer }}"
     metric_relabel_configs:
     # Not store unwanted metrics
     - source_labels: [__name__]
@@ -362,6 +370,8 @@ prometheus_scrape_configs_global:
       target_label: role
     - source_labels: [__meta_ec2_tag_client]
       target_label: client
+    - source_labels: [__meta_ec2_tag_customer]
+      target_label: customer
     - source_labels: [__meta_ec2_availability_zone]
       target_label: availability_zone
 
