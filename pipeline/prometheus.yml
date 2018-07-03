@@ -63,6 +63,7 @@ resources:
       secret_key: ((aws_secret_key))
       env: ((env))
       project: ((project))
+      customer: ((customer))
     env:
       AWS_ACCESS_KEY_ID: ((aws_access_key))
       AWS_DEFAULT_REGION: ((aws_default_region))
@@ -215,3 +216,5 @@ jobs:
           EXTRA_VARS:
             env: ((env))
             project: ((project))
+            customer: ((customer))
+
