@@ -14,8 +14,8 @@ aws_default_region: eu-west-1
 # Bucket configuration to store terraform remote state file.
 terraform_storage_access_key: ...
 terraform_storage_secret_key: ...
-terraform_storage_bucket_name: prometheus-terraform-remote-state
-terraform_storage_bucket_path: prometheus/($ environment $)
+terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
+terraform_storage_bucket_path: ($ project $)/($ environment $)
 
 #
 # Ansible
