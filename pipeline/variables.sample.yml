@@ -39,7 +39,7 @@ prometheus_stack_git_branch: master
 prometheus_config_git_repository: git@github.com:MyUser/config-prometheus.git
 prometheus_config_git_branch: master
 
-prometheus_config_ansible_path: ansible
-prometheus_config_terraform_path: terraform/($ environment $)
+prometheus_config_ansible_path: ($ project $)/ansible
+prometheus_config_terraform_path: ($ project $)/terraform/($ environment $)
 
 prometheus_config_git_private_key: ((git_prometheus_config.ssh_key))
