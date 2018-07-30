@@ -15,6 +15,8 @@ variable "short_region" {
     ap-southeast-2 = "ap-so2"
     eu-central-1   = "eu-ce1"
     eu-west-1      = "eu-we1"
+    eu-west-2      = "eu-we2"
+    eu-west-3      = "eu-we3"
     sa-east-1      = "sa-ea1"
     us-east-1      = "us-ea1"
     us-west-1      = "us-we1"
