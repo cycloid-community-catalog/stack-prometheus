@@ -42,3 +42,65 @@ module "prometheus" {
   # rds_parameters       = ""
 
 }
+
+# Example of security group to allow prometheus server to reach your infra and prod vpc
+
+#resource "aws_security_group" "infra_allow_metrics" {
+#  name        = "infra_allow_metrics"
+#  description = "Allow metrics server to collect metrics"
+#  vpc_id      = "${data.terraform_remote_state.infrastructure.infra_vpc_id}"
+#
+#  ingress = {
+#    from_port       = 9100
+#    to_port         = 9100
+#    protocol        = "tcp"
+#    security_groups = ["${module.prometheus.prometheus_secgroup_id}"]
+#    self            = false
+#  }
+#
+#  egress {
+#    from_port   = 0
+#    to_port     = 0
+#    protocol    = "-1"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#
+#  tags {
+#    Name    = "allow-metrics"
+#    project = "infra"
+#  }
+#}
+#
+#output "infra_metrics_sg_allow" {
+#  value = "${aws_security_group.infra_allow_metrics.id}"
+#}
+
+#resource "aws_security_group" "prod_allow_metrics" {
+#  name        = "prod_allow_metrics"
+#  description = "Allow metrics server to collect metrics"
+#  vpc_id      = "${data.terraform_remote_state.infrastructure.prod_vpc_id}"
+#
+#  ingress = {
+#    from_port       = 9100
+#    to_port         = 9100
+#    protocol        = "tcp"
+#    security_groups = ["${module.prometheus.prometheus_secgroup_id}"]
+#    self            = false
+#  }
+#
+#  egress {
+#    from_port   = 0
+#    to_port     = 0
+#    protocol    = "-1"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#
+#  tags {
+#    Name    = "allow-metrics"
+#    project = "infra"
+#  }
+#}
+#
+#output "prod_metrics_sg_allow" {
+#  value = "${aws_security_group.prod_allow_metrics.id}"
+#}
