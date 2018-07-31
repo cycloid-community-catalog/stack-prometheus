@@ -67,7 +67,6 @@ nginx_configs:
     - real_ip_header X-Forwarded-For
     - set_real_ip_from 0.0.0.0/0
   global:
-    - server_tokens off
     - client_max_body_size 5m
 
 nginx_remove_sites:
