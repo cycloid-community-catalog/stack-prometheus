@@ -16,7 +16,7 @@ To have the stack working, you will also have to upload/generate SSL certificate
 
 To create a self-signed certificate:
 ```bash
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+openssl req -x509 -newkey rsa:4096 -keyout prometheus.key -out prometheus.crt -days 365
 ```
 
 Please use the default names for the certificate & key, or override the following variables:

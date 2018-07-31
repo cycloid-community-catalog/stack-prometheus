@@ -220,4 +220,4 @@ jobs:
             env: ((env))
             project: ((project))
             customer: ((customer))
-
+            default_ec2_region: ((aws_default_region))
