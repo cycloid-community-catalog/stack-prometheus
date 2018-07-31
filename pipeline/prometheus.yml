@@ -131,7 +131,7 @@ jobs:
 
         - put: terraform-prometheus-((env))
           params:
-            env_name: prometheus-((env))
+            env_name: ((project))-((env))
             plan_only: true
             terraform_source: merged-stack/
 
@@ -169,7 +169,7 @@ jobs:
 
         - put: terraform-prometheus-((env))
           params:
-            env_name: prometheus-((env))
+            env_name: ((project))-((env))
             run_plan: true
             terraform_source: merged-stack/
 
