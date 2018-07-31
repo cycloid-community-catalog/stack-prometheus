@@ -212,6 +212,7 @@ jobs:
           ANSIBLE_VAULT_PASSWORD: ((ansible_vault_password))
           ANSIBLE_PLAYBOOK_PATH: ansible-playbook
           ANSIBLE_PLAYBOOK_NAME: prometheus.yml
+          AWS_DEFAULT_REGION: ((aws_default_region))
           AWS_ACCESS_KEY_ID: ((aws_access_key))
           AWS_SECRET_ACCESS_KEY: ((aws_secret_key))
           FORCE_ANSIBLE_GALAXY: false
