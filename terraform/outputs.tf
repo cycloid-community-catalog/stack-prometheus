@@ -22,6 +22,11 @@ output "rds_engine" {
   value = "${module.prometheus.rds_engine}"
 }
 
+# This output can be use by the pipeline to generate a variable used in ansible (extract-terraform-outputs)
+output "rds_password" {
+  value = "${var.rds_password}"
+}
+
 output "prometheus_eip" {
   value = "${module.prometheus.prometheus_eip}"
 }
