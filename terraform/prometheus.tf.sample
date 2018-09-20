@@ -37,7 +37,7 @@ module "prometheus" {
   # rds_storage_type     = "gp2"
   # rds_type             = "db.t2.small"
   # rds_username         = "grafana"
-  # rds_engine           = ""mysql"
+  # rds_engine           = "mysql"
   # rds_engine_version   = "5.7.16"
   # rds_backup_retention = 7
   # rds_parameters       = ""
