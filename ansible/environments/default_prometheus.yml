@@ -30,6 +30,7 @@ default_ec2_region: eu-west-1
 
 # Use ssl on prometheus stack
 prometheus_ssl: false
+external_url_schema: "{% if not prometheus_ssl %}http{% else %}https{% endif %}"
 
 prometheus_certificat_name: prometheus.crt
 prometheus_certificat_key_name: prometheus.key
@@ -189,6 +190,10 @@ nginx_sites: "{% if not prometheus_ssl %}{{ nginx_sites_default }}{% else %}{{ n
 install_alertmanager: true
 alertmanager_hostname: "{{ alertmanager_domain_name }}"
 
+alertmanager_commandline_args:
+  config.file: "/alertmanager/alertmanager.yml"
+  web.external-url: "{{ external_url_schema }}://{{ alertmanager_hostname }}"
+
 smtp_smarthost: 'smtp.gmail.com:587'
 smtp_from: 'foo@bar.com'
 smtp_auth_username: 'foo@bar.com'
@@ -252,6 +257,7 @@ prometheus_commandline_args:
   config.file: "/prometheus-data/prometheus.yml"
   storage.tsdb.path: "/prometheus-data/data"
   storage.tsdb.retention: "{{ prometheus_data_retention }}"
+  web.external-url: "{{ external_url_schema }}://{{ prometheus_hostname }}"
 
 prometheus_scrape_interval: 1m
 prometheus_evaluation_interval: 1m
