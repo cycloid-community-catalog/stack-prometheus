@@ -20,10 +20,10 @@ config:
   ansible:
     prometheus:
       path: 'ansible/environments/prometheus.yml.sample'
-      destination: 'ansible/environments/($ environment $)-prometheus.yml'
+      destination: '($ project $)/ansible/environments/($ environment $)-prometheus.yml'
 
   # Configuration of terraform to setup the infrastructure
   terraform:
     prometheus:
       path: 'terraform/prometheus.tf.sample'
-      destination: 'terraform/prometheus/($ environment $)/prometheus.tf'
+      destination: '($ project $)/terraform/($ environment $)/prometheus.tf'
