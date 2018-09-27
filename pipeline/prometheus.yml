@@ -77,7 +77,8 @@ resources:
     uri: https://github.com/cycloid-community-catalog/stack-prometheus
     branch: ((prometheus_stack_git_branch))
     check_every: 2m
-    path: /ansible/
+    paths:
+      - /ansible/
 
 - name: catalog-config-ansible
   type: git
@@ -86,7 +87,8 @@ resources:
     branch: ((prometheus_config_git_branch))
     check_every: 2m
     private_key: ((prometheus_config_git_private_key))
-    path: /ansible/
+    paths:
+      - /((prometheus_config_ansible_path))
 
 - name: stack-prometheus-terraform
   type: git
@@ -94,7 +96,8 @@ resources:
     uri: https://github.com/cycloid-community-catalog/stack-prometheus
     branch: ((prometheus_stack_git_branch))
     check_every: 2m
-    path: /terraform/
+    paths:
+      - /terraform/
 
 - name: catalog-config-terraform
   type: git
@@ -103,7 +106,8 @@ resources:
     branch: ((prometheus_config_git_branch))
     check_every: 2m
     private_key: ((prometheus_config_git_private_key))
-    path: /terraform/
+    paths:
+      - /((prometheus_config_terraform_path))
 
 
 jobs:
