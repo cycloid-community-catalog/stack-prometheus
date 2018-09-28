@@ -2,6 +2,7 @@ prometheus_domain_name: "prometheus.localhost"
 alertmanager_domain_name: "alertmanager.localhost"
 grafana_domain_name: "grafana.localhost"
 role: prometheus
+customer: cycloid
 
 default_ec2_region: eu-west-1
 
