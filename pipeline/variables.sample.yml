@@ -13,6 +13,7 @@ aws_default_region: eu-west-1
 
 # Password used for your rds (grafana) if needed
 #rds_password: ((raw_rds_password))
+rds_password: ChangeMePls
 
 # Bucket configuration to store terraform remote state file.
 terraform_storage_access_key: ((aws.access_key))
