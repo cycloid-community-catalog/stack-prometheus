@@ -20,6 +20,10 @@ output "prometheus_secgroup_id" {
   value = "${aws_security_group.prometheus.id}"
 }
 
+output "prometheus_instance_id" {
+  value = "${aws_instance.prometheus.id}"
+}
+
 # workaround to handle count = 0 on output
 # https://github.com/hashicorp/terraform/issues/16726
 output "rds_address" {
