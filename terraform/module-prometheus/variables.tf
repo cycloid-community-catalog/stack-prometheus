@@ -80,6 +80,10 @@ variable "prometheus_ebs_optimized" {
   default = false
 }
 
+variable "prometheus_enable_eip" {
+  default = true
+}
+
 ###
 
 # grafana
