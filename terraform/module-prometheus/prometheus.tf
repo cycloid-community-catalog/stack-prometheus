@@ -56,6 +56,15 @@ resource "aws_security_group_rule" "bastion_to_prometheus_ssh" {
   security_group_id        = "${aws_security_group.prometheus.id}"
 }
 
+resource "aws_security_group_rule" "prometheus_to_himself_instance_metrics" {
+  type              = "ingress"
+  from_port         = "9100"
+  to_port           = "9100"
+  protocol          = "tcp"
+  self              = true
+  security_group_id = "${aws_security_group.prometheus.id}"
+}
+
 ###
 
 # EC2
