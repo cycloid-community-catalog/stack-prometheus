@@ -95,6 +95,16 @@ resource "aws_instance" "prometheus" {
     delete_on_termination = true
   }
 
+  volume_tags {
+    cycloid.io = "true"
+    Name       = "${var.project}-prometheus-${lookup(var.short_region, var.aws_region)}-${var.env}"
+    env        = "${var.env}"
+    client     = "${var.customer}"
+    customer   = "${var.customer}"
+    project    = "${var.project}"
+    role       = "prometheus"
+  }
+
   tags {
     cycloid.io = "true"
     Name       = "${var.project}-prometheus-${lookup(var.short_region, var.aws_region)}-${var.env}"
