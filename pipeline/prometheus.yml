@@ -220,7 +220,7 @@ jobs:
           AWS_DEFAULT_REGION: ((aws_default_region))
           AWS_ACCESS_KEY_ID: ((aws_access_key))
           AWS_SECRET_ACCESS_KEY: ((aws_secret_key))
-          FORCE_ANSIBLE_GALAXY: false
+          ANSIBLE_FORCE_GALAXY: false
           EXTRA_VARS:
             env: ((env))
             project: ((project))
