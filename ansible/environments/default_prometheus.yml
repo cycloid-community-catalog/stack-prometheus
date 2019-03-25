@@ -1,3 +1,7 @@
+
+prometheus_version: v2.8.0
+alertmanager_version: v0.16.1
+
 prometheus_domain_name: "prometheus.localhost"
 alertmanager_domain_name: "alertmanager.localhost"
 grafana_domain_name: "grafana.localhost"
