@@ -1,5 +1,5 @@
 
-prometheus_version: v2.8.0
+prometheus_version: v2.8.1
 alertmanager_version: v0.16.1
 
 prometheus_domain_name: "prometheus.localhost"
