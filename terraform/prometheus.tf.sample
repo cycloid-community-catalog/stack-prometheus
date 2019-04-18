@@ -14,28 +14,51 @@ module "prometheus" {
   aws_region  = "${var.aws_region}"
   #####################################
 
+  #. vpc_id (required):
+  #+ Amazon VPC id on which create each components.
+  vpc_id = "<vpc-id>"
 
-  keypair_name             = "<key-pair>"
-  vpc_id                   = "<vpc-id>"
-  bastion_sg_allow         = "<bastion-sg>"
+  #. keypair_name (optional): cycloid
+  #+ SSH keypair name to use to deploy ec2 instances.
+  keypair_name = "my-key-pair"
 
-  # public_subnets_ids       = ["<public-subnets>"]
-  # private_subnets_ids      = ["private-subnets"]
+  #. bastion_sg_allow (optional):
+  #+ Amazon source security group ID which will be allowed to connect on Fronts port 22 (ssh).
+  bastion_sg_allow = "<bastion-sg>"
 
+  #. public_subnets_ids (required, array):
+  #+ Amazon subnets IDs on which create each components.
+  public_subnets_ids = ["public-subnets"]
 
-  # If you need to create a rds (for example used for grafana)
-  # create_rds_database  = "true"
-  # rds_password         = "${var.rds_password}"
-  # rds_database         = "grafana"
-  # rds_disk_size        = 10
-  # rds_multiaz          = false
-  # rds_storage_type     = "gp2"
-  # rds_type             = "db.t2.small"
-  # rds_username         = "grafana"
-  # rds_engine           = "mysql"
-  # rds_engine_version   = "5.7.16"
-  # rds_backup_retention = 7
-  # rds_parameters       = ""
+  #. private_subnets_ids (optional, array): []
+  #+ Amazon subnets IDs on which create each components. Used when create_rds_database is true.
+
+  #. create_rds_database (optional, bool): false
+  #+ create a rds database generaly used for grafana. **false** will not create the database
+
+  #. rds_password (optional): ChangeMePls
+  #+ RDS password. expected value is "${var.rds_password}" to get it from the pipeline.
+
+  #. prometheus_type (optional): t2.micro
+  #+ Amazon EC2 instance type for Prometheus server.
+
+  #. prometheus_disk_size (optional): 60
+  #+ Disk size for the Prometheus server.
+
+  #. enable_https (optional, bool): false
+  #+ Open or not the HTTPS port on the EC2 instance.
+
+  #. rds_database (optional): grafana
+  #+ RDS database name
+
+  #. rds_disk_size (optional): 10
+  #+ RDS database disk size
+
+  #. rds_type (optional): db.t2.small
+  #+ RDS database instance size
+
+  #. rds_username (optional): grafana
+  #+ RDS database username
 
 }
 

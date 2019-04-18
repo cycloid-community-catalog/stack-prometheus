@@ -5,10 +5,13 @@ alertmanager_version: v0.16.1
 prometheus_domain_name: "prometheus.localhost"
 alertmanager_domain_name: "alertmanager.localhost"
 grafana_domain_name: "grafana.localhost"
+grafana_admin_password: "admin"
 role: prometheus
 customer: cycloid
 
-default_ec2_region: eu-west-1
+ec2_region: "{{ lookup('env','AWS_DEFAULT_REGION') | default('eu-west-1')}}"
+access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') | default(omit)}}"
+secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') | default(omit)}}"
 
 # FIXME do we want to setup postfix ? Require SES login
 # Postfix unused for now
@@ -58,9 +61,6 @@ nginx_auth_basic_files:
 #   # Default : grafana / grafana -> grafana:$apr1$YSYnc168$x7l8B0.I8e0usgr5ydU.5.
 #   grafana:
 #     - "grafana:$apr1$YSYnc168$x7l8B0.I8e0usgr5ydU.5."
-# #  # Default : grafana / grafana -> grafana:$apr1$YSYnc168$x7l8B0.I8e0usgr5ydU.5.
-# #  grafana:
-# #    - "grafana:$apr1$YSYnc168$x7l8B0.I8e0usgr5ydU.5."
 
 nginx_configs:
   proxy:
@@ -323,7 +323,7 @@ prometheus_scrape_configs_global:
   - job_name: 'telegraf via EC2 service discovery'
     scheme: http
     ec2_sd_configs:
-    - region: "{{ec2_region | default(default_ec2_region) }}"
+    - region: "{{ec2_region }}"
       # Need https://www.robustperception.io/automatically-monitoring-ec2-instances/
       # Using role or accesskey
       #access_key: "{{access_key}}"
@@ -437,7 +437,7 @@ telegraf_plugins_extra:
   cloudwatch_ec2:
     plugin: cloudwatch
     config:
-        - 'region = "{{ec2_region | default(default_ec2_region) }}"'
+        - 'region = "{{ec2_region }}"'
         - period = "10m"
         - interval = "10m"
         - namespace = "AWS/EC2"
@@ -450,7 +450,7 @@ telegraf_plugins_extra:
   cloudwatch_rds:
     plugin: cloudwatch
     config:
-        - 'region = "{{ec2_region | default(default_ec2_region) }}"'
+        - 'region = "{{ec2_region }}"'
         - period = "10m"
         - interval = "10m"
         - namespace = "AWS/RDS"
