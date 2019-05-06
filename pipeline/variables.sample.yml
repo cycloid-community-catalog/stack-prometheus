@@ -9,7 +9,7 @@
 aws_access_key: ((aws.access_key))
 
 #. aws_secret_key (required): ((aws.secret_key))
-#+ Amazon AWS secret key for Terraform. see value format [Here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)
+#+ Amazon AWS secret key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)
 aws_secret_key: ((aws.secret_key))
 
 #. aws_default_region (required): eu-west-1
