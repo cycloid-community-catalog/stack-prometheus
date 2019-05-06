@@ -1,49 +1,93 @@
-env: ($ environment $)
-project: ($ project $)
-customer: ($ organization_canonical $)
-
 #
 # Terraform
 #
 
 # Amazon access to use to run terraform. Usually admin account to be able to create Amazon services.
+
+#. aws_access_key (required): ((aws.access_key))
+#+ Amazon AWS access key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)
 aws_access_key: ((aws.access_key))
+
+#. aws_secret_key (required): ((aws.secret_key))
+#+ Amazon AWS secret key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)
 aws_secret_key: ((aws.secret_key))
+
+#. aws_default_region (required): eu-west-1
+#+ Amazon AWS region to use for Terraform.
 aws_default_region: eu-west-1
 
-# Password used for your rds (grafana) if needed
-#rds_password: ((raw_rds_password))
-rds_password: ChangeMePls
-
-# Bucket configuration to store terraform remote state file.
-terraform_storage_access_key: ((aws.access_key))
-terraform_storage_secret_key: ((aws.secret_key))
+#. terraform_storage_bucket_name (required): ($ organization_canonical $)-terraform-remote-state
+#+ AWS S3 bucket name to store terraform remote state file.
 terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
+
+#. terraform_storage_bucket_path (required): ($ project $)/($ environment $)
+#+ AWS S3 bucket path to store terraform remote state file.
 terraform_storage_bucket_path: ($ project $)/($ environment $)
+
+#. rds_password (optional): ((raw_rds_password))
+#+ Password used for your rds (grafana) if needed
+rds_password: ((raw_rds_password))
+
 
 #
 # Ansible
 #
 
-# Password used for your ansible vault variables.
+#. ansible_vault_password (required): ((raw_ansible_vault_password))
+#+ Password used by ansible vault to decrypt your vaulted files.
 ansible_vault_password: ((raw_ansible_vault_password))
 
-# Configuration of the bastion server used to run ansible
+#. bastion_url (required): admin@bastion.cycloid.io
+#+ bastion url used by ansible to connect on aws ec2 instances.
 bastion_url: admin@bastion.cycloid.io
+
+#. bastion_private_key_pair (required): ((ssh_bastion.ssh_key))
+#+ bastion SSH private key used by ansible to connect on aws ec2 instances and the bastion itself.
 bastion_private_key_pair: ((ssh_bastion.ssh_key))
+
 
 #
 # Repos
 #
 
-# If you need to use a specific branch of prometheus-stack
-prometheus_stack_git_branch: master
+#. config_git_repository (required): git@github.com:MyUser/config-prometheus.git
+#+ Git repository url containing the config of the stack.
+config_git_repository: git@github.com:MyUser/config-prometheus.git
 
-# Configuration of the git repository used to configure the stack
-prometheus_config_git_repository: git@github.com:MyUser/config-prometheus.git
-prometheus_config_git_branch: master
+#. config_git_branch (required): master
+#+ Branch of the config git repository.
+config_git_branch: master
 
-prometheus_config_ansible_path: ($ project $)/ansible
-prometheus_config_terraform_path: ($ project $)/terraform/($ environment $)
+#. config_git_private_key (required): ((git_config.ssh_key))
+#+ SSH key pair to fetch the config git repository.
+config_git_private_key: ((git_config.ssh_key))
 
-prometheus_config_git_private_key: ((git_prometheus_config.ssh_key))
+
+#
+# Default variables that shouldn't be changed except if needed
+#
+
+#. env (required): ($ environment $)
+#+ Name of the project's environment.
+env: ($ environment $)
+
+#. project (required): ($ project $)
+#+ Name of the project.
+project: ($ project $)
+
+#. customer (required): ($ organization_canonical $)
+#+ Name of the Cycloid Organization, used as customer variable name.
+customer: ($ organization_canonical $)
+
+#. stack_git_branch (required): master
+#+ Branch to use on the public stack git repository
+stack_git_branch: master
+
+#. config_ansible_path (required): ($ project $)/ansible
+#+ Path of Ansible files in the config git repository
+config_ansible_path: ($ project $)/ansible
+
+#. config_terraform_path (required): ($ project $)/terraform/($ environment $)
+#+ Path of Terraform files in the config git repository
+config_terraform_path: ($ project $)/terraform/($ environment $)
+
