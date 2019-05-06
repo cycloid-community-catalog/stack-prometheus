@@ -36,7 +36,7 @@ In order to run this task, couple elements are required within the infrastructur
 
   * `terraform-plan`: Terraform job that will simply make a plan of the stack.
   * `terraform-apply`: Terraform job similar to the plan one, but will actually create/update everything that needs to. Please see the plan diff for a better understanding.
-  * `terraform-destroy`: :warning: Terraform job meant to destroy the whole stack - **NO CONFIRMATION ASKED**. If triggered, the full project **WILL** be destroyed. Use with caution.
+   * `deploy`: Ansible job to deploy the application on EC2 server. In this case Prometheus, Grafana, ... 
   * `deploy`: Ansible job to deploy the application on EC2 server. In this case Prometheus, Grafana, ...
 
 
