@@ -91,7 +91,7 @@ variable "prometheus_enable_eip" {
 ###
 variable "create_rds_database" {
   description = "**true** create a rds database generaly used for grafana. **false** will not create the database"
-  default     = "true"
+  default     = "false"
 }
 
 variable "rds_database" {
