@@ -1,26 +1,16 @@
 {
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "4.5.0"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    }
-  ],
   "annotations": {
-    "list": []
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
   },
   "editable": true,
   "gnetId": null,
@@ -552,7 +542,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "(disk_inodes_used{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path=~\"^/$\", device=~\"rootfs\"} / disk_inodes_total{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path=~\"^/$\", device=~\"rootfs\"}) * 100",
+              "expr": "max by (instance, device) ((disk_inodes_used{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path!~\"^(/dev|/run|/sys).*$\", device=~\".*\"} / disk_inodes_total{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path!~\"^(/dev|/run|/sys).*$\", device=~\".*\"}) * 100)",
               "interval": "",
               "intervalFactor": 1,
               "legendFormat": "{{instance}} {{device}} - Used",
@@ -564,7 +554,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Disk inodes for root",
+          "title": "Disks inodes usage",
           "tooltip": {
             "msResolution": true,
             "shared": true,
@@ -648,19 +638,19 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "disk_total{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path=~\"^/$\", device=~\"rootfs\"}",
+              "expr": "max by (instance, path) (disk_total{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path!~\"^(/dev|/run|/sys).*$\", device=~\".*\"})",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{instance}} {{device}} - Total",
+              "legendFormat": "{{instance}} {{path}} - Total",
               "metric": "",
               "refId": "A",
               "step": 1
             },
             {
-              "expr": "disk_used{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path=~\"^/$\", device=~\"rootfs\"}",
+              "expr": "max by (instance, path) (disk_used{instance=~\"^$Instance$\", env=~\"^$Env\", role=~\"^$Role\", path!~\"^(/dev|/run|/sys).*$\", device=~\".*\"})",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{instance}} {{device}} - Used",
+              "legendFormat": "{{instance}} {{path}} - Used",
               "metric": "",
               "refId": "B",
               "step": 1
@@ -669,7 +659,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Disk usage for root",
+          "title": "Disks space usage",
           "tooltip": {
             "msResolution": true,
             "shared": true,

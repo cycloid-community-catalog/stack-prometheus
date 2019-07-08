@@ -73,11 +73,11 @@ variable "prometheus_disk_type" {
 }
 
 variable "prometheus_type" {
-  default = "t2.small"
+  default = "t3.small"
 }
 
 variable "prometheus_ebs_optimized" {
-  default = false
+  default = true
 }
 
 variable "prometheus_enable_eip" {
@@ -91,7 +91,7 @@ variable "prometheus_enable_eip" {
 ###
 variable "create_rds_database" {
   description = "**true** create a rds database generaly used for grafana. **false** will not create the database"
-  default     = "false"
+  default     = true
 }
 
 variable "rds_database" {
@@ -111,7 +111,7 @@ variable "rds_password" {
 }
 
 variable "rds_type" {
-  default = "db.t2.small"
+  default = "db.t3.small"
 }
 
 variable "rds_username" {

@@ -45,9 +45,9 @@ In order to run this task, couple elements are required within the infrastructur
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
 |`ansible_vault_password`|Password used by ansible vault to decrypt your vaulted files.|`-`|`((raw_ansible_vault_password))`|`True`|
-|`aws_access_key`|Amazon AWS access key for Terraform. see value format [Here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.access_key))`|`True`|
+|`aws_access_key`|Amazon AWS access key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.access_key))`|`True`|
 |`aws_default_region`|Amazon AWS region to use for Terraform.|`-`|`eu-west-1`|`True`|
-|`aws_secret_key`|Amazon AWS secret key for Terraform. see value format [Here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.secret_key))`|`True`|
+|`aws_secret_key`|Amazon AWS secret key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.secret_key))`|`True`|
 |`bastion_private_key_pair`|bastion SSH private key used by ansible to connect on aws ec2 instances and the bastion itself.|`-`|`((ssh_bastion.ssh_key))`|`True`|
 |`bastion_url`|bastion url used by ansible to connect on aws ec2 instances.|`-`|`admin@bastion.cycloid.io`|`True`|
 |`config_ansible_path`|Path of Ansible files in the config git repository|`-`|`($ project $)/ansible`|`True`|
@@ -57,6 +57,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`config_terraform_path`|Path of Terraform files in the config git repository|`-`|`($ project $)/terraform/($ environment $)`|`True`|
 |`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
+|`grafana_admin_password`|Define Grafana admin account password|`-`|`"((raw_grafana_admin_password))"`|`False`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
 |`rds_password`|Password used for your rds (grafana) if needed|`-`|`((raw_rds_password))`|`False`|
 |`stack_git_branch`|Branch to use on the public stack git repository|`-`|`master`|`True`|
@@ -71,17 +72,17 @@ In order to run this task, couple elements are required within the infrastructur
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
 |`bastion_sg_allow`|Amazon source security group ID which will be allowed to connect on Fronts port 22 (ssh).|`-`|``|`False`|
-|`create_rds_database`|create a rds database generaly used for grafana. **false** will not create the database|`bool`|`false`|`False`|
+|`create_rds_database`|create a rds database generaly used for grafana. **false** will not create the database|`bool`|`true`|`False`|
 |`enable_https`|Open or not the HTTPS port on the EC2 instance.|`bool`|`false`|`False`|
 |`keypair_name`|SSH keypair name to use to deploy ec2 instances.|`-`|`cycloid`|`False`|
 |`private_subnets_ids`|Amazon subnets IDs on which create each components. Used when create_rds_database is true.|`array`|`[]`|`False`|
 |`prometheus_disk_size`|Disk size for the Prometheus server.|`-`|`60`|`False`|
-|`prometheus_type`|Amazon EC2 instance type for Prometheus server.|`-`|`t2.micro`|`False`|
+|`prometheus_type`|Amazon EC2 instance type for Prometheus server.|`-`|`t3.small`|`False`|
 |`public_subnets_ids`|Amazon subnets IDs on which create each components.|`array`|``|`True`|
 |`rds_database`|RDS database name|`-`|`grafana`|`False`|
 |`rds_disk_size`|RDS database disk size|`-`|`10`|`False`|
 |`rds_password`|RDS password. expected value is "${var.rds_password}" to get it from the pipeline.|`-`|`ChangeMePls`|`False`|
-|`rds_type`|RDS database instance size|`-`|`db.t2.small`|`False`|
+|`rds_type`|RDS database instance size|`-`|`db.t3.small`|`False`|
 |`rds_username`|RDS database username|`-`|`grafana`|`False`|
 |`vpc_id`|Amazon VPC id on which create each components.|`-`|``|`True`|
 
@@ -102,21 +103,24 @@ In order to run this task, couple elements are required within the infrastructur
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
 |`alertmanager_domain_name`|Alertmanager dns name to configure.|`-`|`"alertmanager.localhost"`|`False`|
-|`alertmanager_version`|Version of Alertmanager based on docker image tag|`-`|`v0.16.1`|`False`|
-|`grafana_admin_password`|Define Grafana admin account password|`-`|`admin`|`False`|
+|`alertmanager_slack_api_url`|Configuration of the alertmanager slack receiver.|`-`|`'https://hooks.slack.com/services/...'`|`False`|
+|`alertmanager_slack_channel`|Configuration of the alertmanager slack receiver.|`-`|`'#mychannel'`|`False`|
+|`alertmanager_version`|Version of Alertmanager based on docker image tag|`-`|`v0.18.0`|`False`|
 |`grafana_domain_name`|Grafana dns name to configure.|`-`|`"grafana.localhost"`|`False`|
+|`grafana_version`|Version of Grafana based on docker image tag|`-`|`6.2.5`|`False`|
 |`install_alertmanager`|Install or not Alertmanager|`-`|`true`|`False`|
 |`install_grafana`|Install or not Grafana|`-`|`true`|`False`|
 |`install_prometheus`|Install or not Prometheus.|`-`|`true`|`False`|
 |`nginx_auth_basic_files`|Provide default basic auth : `prometheus / prometheus` and `alertmanager / alertmanager`|`dict`|`...`|`False`|
 |`prometheus_data_retention`|Amount of datas that prometheus should keep|`-`|`60d`|`False`|
 |`prometheus_domain_name`|Prometheus dns name to configure.|`-`|`"prometheus.localhost"`|`False`|
-|`prometheus_version`|Version of Prometheus based on docker image tag|`-`|`v2.8.1`|`False`|
+|`prometheus_version`|Version of Prometheus based on docker image tag|`-`|`v2.11.1`|`False`|
 |`send_alert_to`|Override SMTP configuration used to send emails alerts configured in the default alertmanager receiver.|`-`|`'foo@bar.com'`|`False`|
 |`smtp_auth_password`|Configuration of the default alertmanager email receiver.|`-`|`'barfoo'`|`False`|
 |`smtp_auth_username`|Configuration of the default alertmanager email receiver.|`-`|`'foo@bar.com'`|`False`|
 |`smtp_from`|Configuration of the default alertmanager email receiver.|`-`|`'foo@bar.com'`|`False`|
 |`smtp_smarthost`|Configuration of the default alertmanager email receiver.|`-`|`'smtp.gmail.com:587'`|`False`|
+|`use_ssl`|Use SSL on prometheus stack, if **true** `prometheus.crt` and `prometheus.key` files but be added to `files/nginx/ssl` folder.|`-`|`false`|`False`|<Paste>
 
 ### SSL Certificates
 
@@ -132,8 +136,8 @@ rm prometheus-secure.key
 
 Please use the default names for the certificate & key, or override the following variables:
 ```
-prometheus_certificat_name: prometheus.crt
-prometheus_certificat_key_name: prometheus.key
+prometheus_certificate_name: prometheus.crt
+prometheus_certificate_key_name: prometheus.key
 ```
 
 # Molecule tests

@@ -10,31 +10,41 @@
   vars_files:
     - "environments/default_prometheus.yml"
     - "environments/{{env}}-prometheus.yml"
+
   pre_tasks:
-
-    - name: "Create ssl directory"
+    - name: "Create SSL directory"
       file:
-        path: "{{ certificats_dest }}"
+        path: "{{ certificates_dest }}"
         state: directory
-      when: prometheus_ssl | bool
+      when: use_ssl | bool
 
-    - name: "Install ssl certificat"
+    - name: "Install SSL certificates"
       copy:
         src: "{{ item }}"
-        dest: "{{ certificats_dest }}"
+        dest: "{{ certificates_dest }}"
         mode: 0600
       with_fileglob:
-        - "{{ certificats_src }}"
-      when: prometheus_ssl | bool
-
-
-
+        - "{{ certificates_src }}"
+      when: use_ssl | bool
 
   roles:
-    # Install prometheus
-    - {role: geerlingguy.docker, tags: docker}
-    - {role: cycloid.prometheus, path: /opt/prometheus, tags: prometheus}
-    # Monitoring client part
-    - {role: cycloid.telegraf, tags: telegraf}
-    - {role: jdauphant.nginx, tags: nginx}
+    # Install docker
+    - role: geerlingguy.docker
+      tags:
+        - docker
 
+    # Install prometheus, alertmanager and grafana
+    - role: cycloid.prometheus
+      path: /opt/prometheus
+      tags:
+        - prometheus
+
+    # Monitoring client part
+    - role: cycloid.telegraf
+      tags:
+        - telegraf
+
+    # Install nginx
+    - role: jdauphant.nginx
+      tags:
+        - nginx
