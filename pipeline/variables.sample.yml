@@ -81,7 +81,7 @@ customer: ($ organization_canonical $)
 
 #. stack_git_branch (required): master
 #+ Branch to use on the public stack git repository
-stack_git_branch: master
+stack_git_branch: release-0.1
 
 #. config_ansible_path (required): ($ project $)/ansible
 #+ Path of Ansible files in the config git repository
