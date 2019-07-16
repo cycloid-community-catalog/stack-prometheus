@@ -1,30 +1,83 @@
 # In this file you could override any variables present in default_prometheus.yaml file
 
-#. install_prometheus: true
-#+ Install or not Prometheus.
-
-#. install_alertmanager: true
-#+ Install or not Alertmanager
-
-#. install_grafana: true
-#+ Install or not Grafana
-
 #
 # Global config
 #
 
+#. install_prometheus: true
+#+ Install or not Prometheus.
+
 #. prometheus_domain_name: "prometheus.localhost"
 #+ Prometheus dns name to configure.
+
+#. install_alertmanager: true
+#+ Install or not Alertmanager
 
 #. alertmanager_domain_name: "alertmanager.localhost"
 #+ Alertmanager dns name to configure.
 
+#. install_grafana: true
+#+ Install or not Grafana
+
 #. grafana_domain_name: "grafana.localhost"
 #+ Grafana dns name to configure.
 
+#. use_ssl: false
+#+ Use SSL on prometheus stack, if **true** `prometheus.crt` and `prometheus.key` files but be added to `files/nginx/ssl` folder.
+
 
 #
-# Restrict access
+# Prometheus
+#
+
+#. prometheus_version: v2.11.1
+#+ Version of Prometheus based on docker image tag
+
+#. prometheus_data_retention: 60d
+#+ Amount of datas that prometheus should keep
+
+# For more advanced usage to override prometheus configuration, have a look on default_prometheus.yml file.
+
+
+#
+# Alertmanager
+#
+
+#. alertmanager_version: v0.18.0
+#+ Version of Alertmanager based on docker image tag
+
+#. send_alert_to: 'foo@bar.com'
+#+ Override SMTP configuration used to send emails alerts configured in the default alertmanager receiver.
+
+#. smtp_smarthost: 'smtp.gmail.com:587'
+#+ Configuration of the default alertmanager email receiver.
+
+#. smtp_from: 'foo@bar.com'
+#+ Configuration of the default alertmanager email receiver.
+
+#. smtp_auth_username: 'foo@bar.com'
+#+ Configuration of the default alertmanager email receiver.
+
+#. smtp_auth_password: 'barfoo'
+#+ Configuration of the default alertmanager email receiver.
+
+#. alertmanager_slack_api_url: 'https://hooks.slack.com/services/...'
+#+ Configuration of the alertmanager slack receiver.
+
+#. alertmanager_slack_channel: '#mychannel'
+#+ Configuration of the alertmanager slack receiver.
+
+
+#
+# Grafana
+#
+
+#. grafana_version: 6.2.5
+#+ Version of Grafana based on docker image tag
+
+
+#
+# Nginx
 #
 
 # Configure the basic auth for each services.
@@ -50,48 +103,3 @@
 #            33343731386330343762653965393865633864653763626130626138646463376333613762303432
 #            33636634613637626335663139366336613462313935333939303465666636363930663363666332
 #            363637343733646465376362643933623137
-
-
-#
-# Grafana
-#
-
-#. grafana_admin_password: admin
-#+ Define Grafana admin account password
-# Note : Grafana service is installed with the Docker image grafana/grafana.
-# To provision grafana datasources admin account is used by ansible.
-
-#
-# Alertmanager
-#
-
-#. alertmanager_version: v0.16.1
-#+ Version of Alertmanager based on docker image tag
-
-#. send_alert_to: 'foo@bar.com'
-#+ Override SMTP configuration used to send emails alerts configured in the default alertmanager receiver.
-
-#. smtp_smarthost: 'smtp.gmail.com:587'
-#+ Configuration of the default alertmanager email receiver.
-
-#. smtp_from: 'foo@bar.com'
-#+ Configuration of the default alertmanager email receiver.
-
-#. smtp_auth_username: 'foo@bar.com'
-#+ Configuration of the default alertmanager email receiver.
-
-#. smtp_auth_password: 'barfoo'
-#+ Configuration of the default alertmanager email receiver.
-
-
-#
-# Prometheus
-#
-
-#. prometheus_version: v2.8.1
-#+ Version of Prometheus based on docker image tag
-
-#. prometheus_data_retention: 60d
-#+ Amount of datas that prometheus should keep
-
-# For more advanced usage to override prometheus configuration, have a look on default_prometheus.yml file.

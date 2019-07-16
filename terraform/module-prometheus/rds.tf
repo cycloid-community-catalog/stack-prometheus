@@ -5,7 +5,7 @@
 ###
 
 resource "aws_security_group" "rds" {
-  count       = "${var.create_rds_database == "true" ? 1 : 0}"
+  count       = "${var.create_rds_database ? 1 : 0}"
   name        = "${var.project}-rds-${var.env}"
   description = "rds ${var.env} for ${var.project}"
   name        = "${var.project}-rds-${var.env}"
@@ -31,7 +31,7 @@ resource "aws_security_group" "rds" {
 }
 
 resource "aws_db_instance" "grafana" {
-  count             = "${var.create_rds_database == "true" ? 1 : 0}"
+  count             = "${var.create_rds_database ? 1 : 0}"
   depends_on        = ["aws_security_group.rds"]
   identifier        = "${var.project}-rds-${var.env}"
   allocated_storage = "${var.rds_disk_size}"
@@ -68,7 +68,7 @@ resource "aws_db_instance" "grafana" {
 }
 
 resource "aws_db_subnet_group" "rds-subnet" {
-  count       = "${var.create_rds_database == "true" ? 1 : 0}"
+  count       = "${var.create_rds_database ? 1 : 0}"
   name        = "engine-cycloid.io_subnet-rds-${var.vpc_id}"
   description = "subnet-rds-${var.vpc_id}"
   subnet_ids  = ["${var.private_subnets_ids}"]

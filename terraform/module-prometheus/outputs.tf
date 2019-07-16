@@ -13,7 +13,7 @@
 #}
 
 output "prometheus_eip" {
-  value = "${aws_eip.prometheus.public_ip}"
+  value = "${element(aws_eip.prometheus.*.public_ip, 0)}"
 }
 
 output "prometheus_secgroup_id" {

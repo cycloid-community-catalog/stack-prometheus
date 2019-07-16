@@ -45,6 +45,10 @@ bastion_url: admin@bastion.cycloid.io
 #+ bastion SSH private key used by ansible to connect on aws ec2 instances and the bastion itself.
 bastion_private_key_pair: ((ssh_bastion.ssh_key))
 
+#. grafana_admin_password: "((raw_grafana_admin_password))"
+#+ Define Grafana admin account password
+grafana_admin_password: "((raw_grafana_admin_password))"
+
 
 #
 # Repos
@@ -81,7 +85,7 @@ customer: ($ organization_canonical $)
 
 #. stack_git_branch (required): master
 #+ Branch to use on the public stack git repository
-stack_git_branch: release-0.1
+stack_git_branch: master
 
 #. config_ansible_path (required): ($ project $)/ansible
 #+ Path of Ansible files in the config git repository

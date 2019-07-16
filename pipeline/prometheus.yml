@@ -230,6 +230,7 @@ jobs:
             project: ((project))
             customer: ((customer))
             rds_password: ((rds_password))
+            grafana_admin_password: ((grafana_admin_password))
 
   - name: terraform-destroy
     serial: True
