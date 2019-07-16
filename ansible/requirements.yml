@@ -4,7 +4,7 @@
   scm: git
 
 - src: https://github.com/cycloidio/ansible-prometheus.git
-  version: master
+  version: release-0.1
   name: cycloid.prometheus
   scm: git
 
