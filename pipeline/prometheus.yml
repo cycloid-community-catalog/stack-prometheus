@@ -229,6 +229,7 @@ jobs:
             env: ((env))
             project: ((project))
             customer: ((customer))
+            rds_password: ((rds_password))
 
   - name: terraform-destroy
     serial: True
