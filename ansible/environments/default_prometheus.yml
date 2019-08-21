@@ -56,6 +56,7 @@ prometheus_rule_files:
   # - templates/rules/telegraf-elasticsearch.rules
   # - templates/rules/telegraf-redis.rules
   # - templates/rules/opsgenie.rules
+  # - templates/rules/mongodb_exporter.rules
 
   # Provide my own local rules
   # - '{{ playbook_dir }}/templates/rules/*.rules'
@@ -72,7 +73,7 @@ prometheus_rule_files:
 #       - "myalertmanager.com"
 
 prometheus_scrape_configs_global:
-
+  ## Prometheus
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
@@ -90,7 +91,8 @@ prometheus_scrape_configs_global:
       action: drop
       regex: go_(.*)
 
-  - job_name: 'telegraf via EC2 service discovery'
+  ## telegraf / node_exporter
+  - job_name: 'telegraf / node_exporter'
     scheme: http
     ec2_sd_configs:
     - region: "{{ aws_default_region }}"
@@ -114,10 +116,6 @@ prometheus_scrape_configs_global:
     - source_labels: [__meta_ec2_tag_monitoring_discovery]
       action: drop
       regex: false
-
-    - source_labels: [__name__]
-      action: drop
-      regex: go_(.*)
 
     - source_labels: [__meta_ec2_private_ip]
       regex: '^(.+)$'
@@ -162,6 +160,97 @@ prometheus_scrape_configs_global:
       target_label: instance_id
 
     metric_relabel_configs:
+    # Don't store unwanted metrics
+    - source_labels: [__name__]
+      action: drop
+      regex: go_(.*)
+
+    # Overrides mechanism of ec2 labels on the metric scope
+    - source_labels: [cycloid_tag_Name]
+      regex: '(.+)'
+      target_label: Name
+    - source_labels: [cycloid_tag_project]
+      regex: '(.+)'
+      target_label: project
+    - source_labels: [cycloid_tag_env]
+      regex: '(.+)'
+      target_label: env
+    - source_labels: [cycloid_tag_role]
+      regex: '(.+)'
+      target_label: role
+    - source_labels: [cycloid_tag_client]
+      regex: '(.+)'
+      target_label: client
+    - source_labels: [cycloid_tag_customer]
+      regex: '(.+)'
+      target_label: customer
+    - source_labels: [cycloid_tag_availability_zone]
+      regex: '(.+)'
+      target_label: availability_zone
+    - source_labels: [cycloid_tag_instance_id]
+      regex: '(.+)'
+      target_label: instance_id
+
+    # Remove cycloid_tag_* labels
+    - regex: 'cycloid_tag_.*'
+      action: labeldrop
+
+  ## mongodb_exporter
+  - job_name: 'mongodb_exporter'
+    scheme: http
+    ec2_sd_configs:
+    - region: "{{ aws_default_region }}"
+      port: '{{ mongodb_exporter_port }}'
+
+    relabel_configs:
+    # Only keep targets with mongodb role tag
+    - source_labels: [__meta_ec2_tag_role]
+      action: keep
+      regex: mongodb
+
+    - source_labels: [__meta_ec2_tag_monitoring_discovery]
+      action: drop
+      regex: false
+
+    - source_labels: [__meta_ec2_private_ip]
+      regex: '^(.+)$'
+      replacement: '${1}:{{ mongodb_exporter_port }}'
+      target_label: __address__
+
+    # Force labels on metrics
+    # Instance label : Public IP, if not, default private IP
+    - source_labels: [__meta_ec2_private_ip]
+      action: replace
+      target_label: instance
+    - source_labels: [__meta_ec2_public_ip]
+      regex: '^(.+)$'
+      replacement: '${1}'
+      target_label: instance
+
+    # Get some ec2 labels
+    - source_labels: [__meta_ec2_tag_Name]
+      target_label: Name
+    - source_labels: [__meta_ec2_tag_project]
+      target_label: project
+    - source_labels: [__meta_ec2_tag_env]
+      target_label: env
+    - source_labels: [__meta_ec2_tag_role]
+      target_label: role
+    - source_labels: [__meta_ec2_tag_client]
+      target_label: client
+    - source_labels: [__meta_ec2_tag_customer]
+      target_label: customer
+    - source_labels: [__meta_ec2_availability_zone]
+      target_label: availability_zone
+    - source_labels: [__meta_ec2_instance_id]
+      target_label: instance_id
+
+    metric_relabel_configs:
+    # Don't store unwanted metrics
+    - source_labels: [__name__]
+      action: drop
+      regex: go_(.*)
+
     # Overrides mechanism of ec2 labels on the metric scope
     - source_labels: [cycloid_tag_Name]
       regex: '(.+)'
@@ -199,7 +288,7 @@ prometheus_scrape_configs_alertmanager:
       - targets: ['{{ ansible_default_ipv4.address }}:9093']
 
     metric_relabel_configs:
-    # Not store unwanted metrics
+    # Don't store unwanted metrics
     - source_labels: [__name__]
       action: drop
       regex: go_(.*)
