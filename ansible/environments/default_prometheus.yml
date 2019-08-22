@@ -149,16 +149,17 @@ prometheus_scrape_configs_global:
       target_label: env
     - source_labels: [__meta_ec2_tag_role]
       target_label: role
-    - source_labels: [__meta_ec2_tag_client]
-      regex: '(.+)'
-      target_label: customer
     - source_labels: [__meta_ec2_tag_customer]
-      regex: '(.+)'
       target_label: customer
     - source_labels: [__meta_ec2_availability_zone]
       target_label: availability_zone
     - source_labels: [__meta_ec2_instance_id]
       target_label: instance_id
+
+    # backward compatibility with old client tag
+    - source_labels: [__meta_ec2_tag_client]
+      regex: '(.+)'
+      target_label: customer
 
     metric_relabel_configs:
     # Don't store unwanted metrics
