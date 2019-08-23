@@ -312,7 +312,6 @@ prometheus_scrape_configs_global:
           project: "{{ project }}"
           env: "{{ env }}"
           role: "{{ role }}"
-          client: "{{ customer }}"
           customer: "{{ customer }}"
     metric_relabel_configs:
     # Not store unwanted metrics
@@ -332,12 +331,12 @@ prometheus_scrape_configs_global:
 
     relabel_configs:
     # Filer instance by labels whitelist
-    #- source_labels: [__meta_ec2_tag_client, __meta_ec2_tag_project, __meta_ec2_tag_env, __meta_ec2_tag_role]
+    #- source_labels: [__meta_ec2_tag_customer, __meta_ec2_tag_project, __meta_ec2_tag_env, __meta_ec2_tag_role]
     #  action: keep
     #  regex: cycloid;demo;preprod;front
 
     # Filter of instances blacklist
-    # - source_labels: [__meta_ec2_tag_client, __meta_ec2_tag_project]
+    # - source_labels: [__meta_ec2_tag_customer, __meta_ec2_tag_project]
     #   action: drop
     #   regex: cycloid;kubernetes
 
@@ -382,8 +381,6 @@ prometheus_scrape_configs_global:
       target_label: env
     - source_labels: [__meta_ec2_tag_role]
       target_label: role
-    - source_labels: [__meta_ec2_tag_client]
-      target_label: client
     - source_labels: [__meta_ec2_tag_customer]
       target_label: customer
     - source_labels: [__meta_ec2_availability_zone]
@@ -391,6 +388,10 @@ prometheus_scrape_configs_global:
     - source_labels: [__meta_ec2_instance_id]
       target_label: instance_id
 
+    # backward compatibility with old client tag
+    - source_labels: [__meta_ec2_tag_client]
+      regex: '(.+)'
+      target_label: customer
 
 
 # merge alertmanager if needed
