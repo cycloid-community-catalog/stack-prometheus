@@ -42,6 +42,8 @@ provisioner:
     extra-vars:
       env=test
       project=prometheus
+      customer=cycloid
+      grafana_admin_password=admin
     #skip-tags: deploy
     # vvv: "True"
 
