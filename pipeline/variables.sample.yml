@@ -20,10 +20,6 @@ aws_default_region: eu-west-1
 #+ AWS S3 bucket name to store terraform remote state file.
 terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
 
-#. terraform_storage_bucket_path (required): ($ project $)/($ environment $)
-#+ AWS S3 bucket path to store terraform remote state file.
-terraform_storage_bucket_path: ($ project $)/($ environment $)
-
 #. rds_password (optional): ((raw_rds_password))
 #+ Password used for your rds (grafana) if needed
 rds_password: ((raw_rds_password))
@@ -37,12 +33,12 @@ rds_password: ((raw_rds_password))
 #+ Password used by ansible vault to decrypt your vaulted files.
 ansible_vault_password: ((raw_ansible_vault_password))
 
-#. bastion_url (required): admin@bastion.cycloid.io
-#+ bastion url used by ansible to connect on aws ec2 instances.
-bastion_url: admin@bastion.cycloid.io
+#. bastion_url (required): user@bastion.server.com
+#+ bastion URL used by ansible to connect on AWS EC2 instances.
+bastion_url: user@bastion.server.com
 
 #. bastion_private_key_pair (required): ((ssh_bastion.ssh_key))
-#+ bastion SSH private key used by ansible to connect on aws ec2 instances and the bastion itself.
+#+ bastion SSH private key used by ansible to connect on AWS EC2 instances and the bastion itself.
 bastion_private_key_pair: ((ssh_bastion.ssh_key))
 
 #. grafana_admin_password: "((raw_grafana_admin_password))"
@@ -55,15 +51,15 @@ grafana_admin_password: "((raw_grafana_admin_password))"
 #
 
 #. config_git_repository (required): git@github.com:MyUser/config-prometheus.git
-#+ Git repository url containing the config of the stack.
+#+ Git repository URL containing the config of the stack.
 config_git_repository: git@github.com:MyUser/config-prometheus.git
 
 #. config_git_branch (required): master
-#+ Branch of the config git repository.
+#+ Branch of the config Git repository.
 config_git_branch: master
 
 #. config_git_private_key (required): ((git_config.ssh_key))
-#+ SSH key pair to fetch the config git repository.
+#+ SSH key pair to fetch the config Git repository.
 config_git_private_key: ((git_config.ssh_key))
 
 
@@ -88,11 +84,11 @@ customer: ($ organization_canonical $)
 stack_git_branch: master
 
 #. config_ansible_path (required): ($ project $)/ansible
-#+ Path of Ansible files in the config git repository
+#+ Path of Ansible files in the config Git repository
 config_ansible_path: ($ project $)/ansible
 
 #. config_terraform_path (required): ($ project $)/terraform/($ environment $)
-#+ Path of Terraform files in the config git repository
+#+ Path of Terraform files in the config Git repository
 config_terraform_path: ($ project $)/terraform/($ environment $)
 
 #. ansible_version (required): "2.7"

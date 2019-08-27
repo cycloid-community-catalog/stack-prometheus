@@ -45,25 +45,24 @@ In order to run this task, couple elements are required within the infrastructur
 |Name|Description|Type|Default|Required|
 |---|---|:---:|:---:|:---:|
 |`ansible_vault_password`|Password used by ansible vault to decrypt your vaulted files.|`-`|`((raw_ansible_vault_password))`|`True`|
+|`ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
 |`aws_access_key`|Amazon AWS access key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.access_key))`|`True`|
 |`aws_default_region`|Amazon AWS region to use for Terraform.|`-`|`eu-west-1`|`True`|
 |`aws_secret_key`|Amazon AWS secret key for Terraform. See value format [here](https://docs.cycloid.io/advanced-guide/integrate-and-use-cycloid-credentials-manager.html#vault-in-the-pipeline)|`-`|`((aws.secret_key))`|`True`|
-|`bastion_private_key_pair`|bastion SSH private key used by ansible to connect on aws ec2 instances and the bastion itself.|`-`|`((ssh_bastion.ssh_key))`|`True`|
-|`bastion_url`|bastion url used by ansible to connect on aws ec2 instances.|`-`|`admin@bastion.cycloid.io`|`True`|
-|`config_ansible_path`|Path of Ansible files in the config git repository|`-`|`($ project $)/ansible`|`True`|
-|`config_git_branch`|Branch of the config git repository.|`-`|`master`|`True`|
-|`config_git_private_key`|SSH key pair to fetch the config git repository.|`-`|`((git_config.ssh_key))`|`True`|
-|`config_git_repository`|Git repository url containing the config of the stack.|`-`|`git@github.com:MyUser/config-prometheus.git`|`True`|
-|`config_terraform_path`|Path of Terraform files in the config git repository|`-`|`($ project $)/terraform/($ environment $)`|`True`|
+|`bastion_private_key_pair`|bastion SSH private key used by ansible to connect on AWS EC2 instances and the bastion itself.|`-`|`((ssh_bastion.ssh_key))`|`True`|
+|`bastion_url`|bastion URL used by ansible to connect on AWS EC2 instances.|`-`|`user@bastion.server.com`|`True`|
+|`config_ansible_path`|Path of Ansible files in the config Git repository|`-`|`($ project $)/ansible`|`True`|
+|`config_git_branch`|Branch of the config Git repository.|`-`|`master`|`True`|
+|`config_git_private_key`|SSH key pair to fetch the config Git repository.|`-`|`((git_config.ssh_key))`|`True`|
+|`config_git_repository`|Git repository URL containing the config of the stack.|`-`|`git@github.com:MyUser/config-prometheus.git`|`True`|
+|`config_terraform_path`|Path of Terraform files in the config Git repository|`-`|`($ project $)/terraform/($ environment $)`|`True`|
 |`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
 |`grafana_admin_password`|Define Grafana admin account password|`-`|`"((raw_grafana_admin_password))"`|`False`|
-|`ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
 |`rds_password`|Password used for your rds (grafana) if needed|`-`|`((raw_rds_password))`|`False`|
 |`stack_git_branch`|Branch to use on the public stack git repository|`-`|`master`|`True`|
 |`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ organization_canonical $)-terraform-remote-state`|`True`|
-|`terraform_storage_bucket_path`|AWS S3 bucket path to store terraform remote state file.|`-`|`($ project $)/($ environment $)`|`True`|
 
 ## Terraform
 
