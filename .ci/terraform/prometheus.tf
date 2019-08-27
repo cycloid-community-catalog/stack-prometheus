@@ -12,16 +12,16 @@ module "prometheus" {
 
   #. vpc_id (required):
   #+ Amazon VPC id on which create each components.
-  vpc_id = "${data.terraform_remote_state.infrastructure.infra_vpc_id}"
+  vpc_id = "infra_vpc_id"
   #. keypair_name (optional): cycloid
   #+ SSH keypair name to use to deploy ec2 instances.
-  keypair_name = "${data.terraform_remote_state.infrastructure.keypair_name}"
+  keypair_name = "keypair_name"
   #. bastion_sg_allow (optional):
   #+ Amazon source security group ID which will be allowed to connect on Fronts port 22 (ssh).
-  bastion_sg_allow = "${data.terraform_remote_state.infrastructure.infra_bastion_sg_allow}"
+  bastion_sg_allow = "infra_bastion_sg_allow"
   #. public_subnets_ids (required, array):
   #+ Amazon subnets IDs on which create each components.
-  public_subnets_ids = ["${data.terraform_remote_state.infrastructure.infra_public_subnets}"]
+  public_subnets_ids = ["infra_public_subnets"]
 
   #. private_subnets_ids (optional, array): []
   #+ Amazon subnets IDs on which create each components. Used when create_rds_database is true.
@@ -158,3 +158,4 @@ module "prometheus" {
 #output "staging_metrics_sg_allow" {
 #  value = "${aws_security_group.staging_allow_metrics.id}"
 #}
+

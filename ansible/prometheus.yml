@@ -12,6 +12,7 @@
     - "environments/{{env}}-prometheus.yml"
 
   pre_tasks:
+
     - name: "Create SSL directory"
       file:
         path: "{{ certificates_dest }}"

@@ -36,7 +36,7 @@ In order to run this task, couple elements are required within the infrastructur
 
   * `terraform-plan`: Terraform job that will simply make a plan of the stack.
   * `terraform-apply`: Terraform job similar to the plan one, but will actually create/update everything that needs to. Please see the plan diff for a better understanding.
-   * `deploy`: Ansible job to deploy the application on EC2 server. In this case Prometheus, Grafana, ... 
+   * `deploy`: Ansible job to deploy the application on EC2 server. In this case Prometheus, Grafana, ...
   * `terraform-destroy`: :warning: Terraform job meant to destroy the whole stack - **NO CONFIRMATION ASKED**. If triggered, the full project **WILL** be destroyed. Use with caution.
 
 
@@ -58,12 +58,12 @@ In order to run this task, couple elements are required within the infrastructur
 |`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
 |`grafana_admin_password`|Define Grafana admin account password|`-`|`"((raw_grafana_admin_password))"`|`False`|
+|`ansible_version`|Ansible version used in packer and cycloid-toolkit ansible runner|`-`|`"2.7"`|`True`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
 |`rds_password`|Password used for your rds (grafana) if needed|`-`|`((raw_rds_password))`|`False`|
 |`stack_git_branch`|Branch to use on the public stack git repository|`-`|`master`|`True`|
 |`terraform_storage_bucket_name`|AWS S3 bucket name to store terraform remote state file.|`-`|`($ organization_canonical $)-terraform-remote-state`|`True`|
 |`terraform_storage_bucket_path`|AWS S3 bucket path to store terraform remote state file.|`-`|`($ project $)/($ environment $)`|`True`|
-
 
 ## Terraform
 
