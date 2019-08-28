@@ -70,20 +70,22 @@ resource "aws_security_group_rule" "prometheus_to_himself_instance_metrics" {
 
 ###
 
+resource "random_shuffle" "prometheus_subnet_id" {
+  input        = var.public_subnets_ids
+  result_count = 1
+}
+
 resource "aws_instance" "prometheus" {
   ami = data.aws_ami.debian.id
 
   # associate_public_ip_address = false
-  count                = 1
   iam_instance_profile = aws_iam_instance_profile.prometheus.name
   instance_type        = var.prometheus_type
   key_name             = var.keypair_name
   ebs_optimized        = var.prometheus_ebs_optimized
 
   vpc_security_group_ids = compact([var.bastion_sg_allow, aws_security_group.prometheus.id])
-
-  # subnet_id = "${element(var.private_subnets_ids, count.index)}"
-  subnet_id = element(var.public_subnets_ids, count.index)
+  subnet_id              = random_shuffle.prometheus_subnet_id.result[0]
 
   root_block_device {
     volume_size           = var.prometheus_disk_size
@@ -117,7 +119,7 @@ resource "aws_instance" "prometheus" {
 ###
 
 resource "aws_eip" "prometheus" {
-  instance = aws_instance.prometheus[0].id
+  instance = aws_instance.prometheus.id
   vpc      = true
   count    = var.prometheus_enable_eip ? 1 : 0
 }
@@ -129,14 +131,13 @@ resource "aws_eip" "prometheus" {
 ###
 
 resource "aws_cloudwatch_metric_alarm" "recover-prometheus" {
-  count               = 1
   alarm_actions       = ["arn:aws:automate:${var.aws_region}:ec2:recover"]
   alarm_description   = "Recover the instance"
-  alarm_name          = "cycloid-engine_recover-${var.project}-prometheus${count.index}-${var.env}"
+  alarm_name          = "cycloid-engine_recover-${var.project}-prometheus-${var.env}"
   comparison_operator = "GreaterThanThreshold"
 
   dimensions = {
-    InstanceId = element(aws_instance.prometheus.*.id, count.index)
+    InstanceId = aws_instance.prometheus.id
   }
 
   evaluation_periods        = "2"
