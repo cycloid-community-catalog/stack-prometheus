@@ -35,7 +35,7 @@ resource "aws_iam_policy" "ec2-prometheus-sd" {
   name        = "${var.env}-${var.project}-ec2-prometheus-sd"
   path        = "/"
   description = "EC2 Prometheus service discovery"
-  policy      = "${data.aws_iam_policy_document.ec2-prometheus-sd.json}"
+  policy      = data.aws_iam_policy_document.ec2-prometheus-sd.json
 }
 
 # policies for check (like rds_event, ses, instance events ...)
@@ -54,7 +54,7 @@ resource "aws_iam_policy" "ec2-prometheus-checks" {
   name        = "${var.env}-${var.project}-ec2-prometheus-checks"
   path        = "/"
   description = "Allow prometheus to get datas for checks"
-  policy      = "${data.aws_iam_policy_document.ec2-prometheus-checks.json}"
+  policy      = data.aws_iam_policy_document.ec2-prometheus-checks.json
 }
 
 #
@@ -64,14 +64,14 @@ resource "aws_iam_policy" "ec2-prometheus-checks" {
 # Create IAM Role for prometheus
 resource "aws_iam_role" "prometheus" {
   name               = "engine-cycloid-${var.project}-${var.env}"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
   path               = "/${var.project}/"
 }
 
 # Create instance profile
 resource "aws_iam_instance_profile" "prometheus" {
   name = "engine-cycloid-prometheus-${var.project}-${var.env}"
-  role = "${aws_iam_role.prometheus.name}"
+  role = aws_iam_role.prometheus.name
 }
 
 #
@@ -80,12 +80,13 @@ resource "aws_iam_instance_profile" "prometheus" {
 
 resource "aws_iam_policy_attachment" "ec2-prometheus-sd" {
   name       = "${var.env}-${var.project}-ec2-prometheus-sd"
-  roles      = ["${aws_iam_role.prometheus.name}"]
-  policy_arn = "${aws_iam_policy.ec2-prometheus-sd.arn}"
+  roles      = [aws_iam_role.prometheus.name]
+  policy_arn = aws_iam_policy.ec2-prometheus-sd.arn
 }
 
 resource "aws_iam_policy_attachment" "ec2-prometheus-checks" {
   name       = "${var.env}-${var.project}-ec2-prometheus-checks"
-  roles      = ["${aws_iam_role.prometheus.name}"]
-  policy_arn = "${aws_iam_policy.ec2-prometheus-checks.arn}"
+  roles      = [aws_iam_role.prometheus.name]
+  policy_arn = aws_iam_policy.ec2-prometheus-checks.arn
 }
+

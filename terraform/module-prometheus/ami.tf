@@ -3,7 +3,7 @@ data "aws_ami" "debian" {
 
   filter {
     name   = "name"
-    values = ["${var.debian_ami_name}"]
+    values = [var.debian_ami_name]
   }
 
   filter {
@@ -23,3 +23,4 @@ data "aws_ami" "debian" {
 
   owners = ["379101102735"] # Debian
 }
+
