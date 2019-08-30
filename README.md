@@ -113,7 +113,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`nginx_auth_basic_files`|Provide default basic auth : `prometheus / prometheus` and `alertmanager / alertmanager`|`dict`|`...`|`False`|
 |`prometheus_data_retention`|Amount of datas that prometheus should keep|`-`|`60d`|`False`|
 |`prometheus_domain_name`|Prometheus dns name to configure.|`-`|`"prometheus.localhost"`|`False`|
-|`prometheus_version`|Version of Prometheus based on docker image tag|`-`|`v2.11.1`|`False`|
+|`prometheus_version`|Version of Prometheus based on docker image tag|`-`|`v2.12.0`|`False`|
 |`send_alert_to`|Override SMTP configuration used to send emails alerts configured in the default alertmanager receiver.|`-`|`'foo@bar.com'`|`False`|
 |`smtp_auth_password`|Configuration of the default alertmanager email receiver.|`-`|`'barfoo'`|`False`|
 |`smtp_auth_username`|Configuration of the default alertmanager email receiver.|`-`|`'foo@bar.com'`|`False`|
