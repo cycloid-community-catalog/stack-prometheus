@@ -2,10 +2,14 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "bastion_sg_allow" {}
+variable "bastion_sg_allow" {
+}
 
-variable "env" {}
-variable "customer" {}
+variable "env" {
+}
+
+variable "customer" {
+}
 
 variable "short_region" {
   default = {
@@ -25,7 +29,7 @@ variable "short_region" {
 }
 
 variable "zones" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
@@ -34,12 +38,12 @@ variable "keypair_name" {
 }
 
 variable "private_subnets_ids" {
-  type    = "list"
+  type    = list(string)
   default = [""]
 }
 
 variable "public_subnets_ids" {
-  type = "list"
+  type = list(string)
 }
 
 variable "vpc_id" {
@@ -141,3 +145,4 @@ variable "rds_storage_type" {
 variable "rds_skip_final_snapshot" {
   default = false
 }
+
