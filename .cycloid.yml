@@ -8,6 +8,21 @@ keywords:
 author: 'Cycloid'
 image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-prometheus/master/icon.png'
 type: 'stack'
+technologies:
+  - technology: Debian
+    version: 9.x
+  - technology: Nginx
+    version: 1.1x
+  - technology: docker
+    version: n/a
+  - technology: telegraf
+    version: n/a
+  - technology: grafana
+    version: n/a
+  - technology: alertmanager
+    version: n/a
+  - technology: prometheus
+    version: n/a
 config:
   # Configuration of the CI pipeline
   pipeline:
