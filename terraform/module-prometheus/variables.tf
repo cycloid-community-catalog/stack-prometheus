@@ -58,6 +58,20 @@ variable "enable_https" {
   default = false
 }
 
+variable "extra_tags" {
+  default = {}
+}
+
+locals {
+  standard_tags = {
+    "cycloid.io" = "true"
+    env          = var.env
+    project      = var.project
+    customer     = var.customer
+  }
+  merged_tags = merge(local.standard_tags, var.extra_tags)
+}
+
 ###
 
 # prometheus
