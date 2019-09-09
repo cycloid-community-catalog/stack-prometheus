@@ -18,14 +18,10 @@ resource "aws_security_group" "rds" {
     security_groups = [aws_security_group.prometheus.id]
   }
 
-  tags = {
-    "cycloid.io" = "true"
+  tags = merge(local.merged_tags, {
     Name         = "${var.project}-rds-${var.env}"
-    env          = var.env
-    customer     = var.customer
-    project      = var.project
     role         = "rds"
-  }
+  })
 }
 
 resource "aws_db_instance" "grafana" {
@@ -53,15 +49,11 @@ resource "aws_db_instance" "grafana" {
   db_subnet_group_name   = aws_db_subnet_group.rds-subnet[0].id
   vpc_security_group_ids = [aws_security_group.rds[0].id]
 
-  tags = {
-    "cycloid.io" = "true"
+  tags = merge(local.merged_tags, {
     Name         = "${var.project}-rds-${var.short_region[var.aws_region]}-${var.env}"
     role         = "rds"
-    customer     = var.customer
-    env          = var.env
-    project      = var.project
     type         = "master"
-  }
+  })
 }
 
 resource "aws_db_subnet_group" "rds-subnet" {

@@ -16,14 +16,10 @@ resource "aws_security_group" "prometheus" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    "cycloid.io" = "true"
+  tags = merge(local.merged_tags, {
     Name         = "${var.project}-prometheus-${var.env}"
-    env          = var.env
-    customer     = var.customer
-    project      = var.project
     role         = "prometheus"
-  }
+  })
 }
 
 resource "aws_security_group_rule" "any_to_http" {
@@ -93,23 +89,15 @@ resource "aws_instance" "prometheus" {
     delete_on_termination = true
   }
 
-  volume_tags = {
-    "cycloid.io" = "true"
+  volume_tags = merge(local.merged_tags, {
     Name         = "${var.project}-prometheus-${var.short_region[var.aws_region]}-${var.env}"
-    env          = var.env
-    customer     = var.customer
-    project      = var.project
     role         = "prometheus"
-  }
+  })
 
-  tags = {
-    "cycloid.io" = "true"
+  tags = merge(local.merged_tags, {
     Name         = "${var.project}-prometheus-${var.short_region[var.aws_region]}-${var.env}"
-    env          = var.env
-    customer     = var.customer
-    project      = var.project
     role         = "prometheus"
-  }
+  })
 }
 
 ###

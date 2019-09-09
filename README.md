@@ -58,6 +58,7 @@ In order to run this task, couple elements are required within the infrastructur
 |`config_terraform_path`|Path of Terraform files in the config Git repository|`-`|`($ project $)/terraform/($ environment $)`|`True`|
 |`customer`|Name of the Cycloid Organization, used as customer variable name.|`-`|`($ organization_canonical $)`|`True`|
 |`env`|Name of the project's environment.|`-`|`($ environment $)`|`True`|
+|`extra_tags`|Dict of extra tags to add on aws resources. format { "foo" = "bar" }.|`-`|`{}`|`False`|
 |`grafana_admin_password`|Define Grafana admin account password|`-`|`"((raw_grafana_admin_password))"`|`False`|
 |`project`|Name of the project.|`-`|`($ project $)`|`True`|
 |`rds_password`|Password used for your rds (grafana) if needed|`-`|`((raw_rds_password))`|`False`|
