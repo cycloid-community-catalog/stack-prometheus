@@ -1,6 +1,7 @@
 # Configuration of the CI pipeline
 name: 'Prometheus'
 canonical: 'stack-prometheus'
+status: 'public'
 description: 'Deploy a standalone Prometheus stack with Docker components on Aws EC2 server. Contain Alertmanager, Grafana and Prometheus.'
 keywords:
   - 'prometheus'
