@@ -1,14 +1,17 @@
-# Configuration of the CI pipeline
+---
+# Configuration of the Cycloid stack
 name: 'Prometheus'
 canonical: 'stack-prometheus'
 status: 'public'
-description: 'Deploy a standalone Prometheus stack with Docker components on Aws EC2 server. Contain Alertmanager, Grafana and Prometheus.'
+description: |
+  Deploy a standalone Prometheus stack with Docker components on Aws EC2 server.
+  Contain Alertmanager, Grafana and Prometheus.
 keywords:
   - 'prometheus'
-  - 'aws'
+  - 'provider:aws'
 author: 'Cycloid'
-image: 'https://raw.githubusercontent.com/cycloid-community-catalog/stack-prometheus/master/icon.png'
-type: 'stack'
+image: |
+  https://raw.githubusercontent.com/cycloid-community-catalog/stack-prometheus/master/icon.png
 technologies:
   - technology: Debian
     version: 9.x
@@ -24,11 +27,12 @@ technologies:
     version: n/a
   - technology: prometheus
     version: n/a
+
 config:
   # Configuration of the CI pipeline
   pipeline:
     pipeline:
-      path: 'pipeline/prometheus.yml'
+      path: 'pipeline/pipeline.yml'
     variables:
       path: 'pipeline/variables.sample.yml'
 

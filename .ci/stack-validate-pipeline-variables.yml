@@ -29,7 +29,7 @@ molecule_env_vars:
 
 #. terraform_version (required): latest
 #+ terraform version to validate the stack.
-terraform_version: 0.12.6
+terraform_version: latest
 
 #. terraform_env_vars (required): dict
 #+ terraform configuration to validate the stack.
@@ -46,7 +46,7 @@ pipeline_env_vars:
   USERNAME: ((cycloid_bot_account.login))
   PASSWORD: ((cycloid_bot_account.password))
   # TEMPLATE to use in the stack
-  PIPELINE_TEMPLATE: prometheus.yml
+  PIPELINE_TEMPLATE: pipeline.yml
   # VARIABLES to use to create the PIPELINE_TEMPLATE
   PIPELINE_VARIABLES: variables.sample.yml
   # Where to create the pipeline
@@ -72,7 +72,6 @@ stack_terraform_path: terraform
 #+ Path of pipeline variables files in the config git repository
 config_pipeline_path: .ci/pipeline
 stack_pipeline_path: pipeline
-
 
 
 #
