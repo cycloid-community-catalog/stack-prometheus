@@ -20,18 +20,18 @@ aws_default_region: eu-west-1
 #+ AWS S3 bucket name to store terraform remote state file.
 terraform_storage_bucket_name: ($ organization_canonical $)-terraform-remote-state
 
-#. rds_password (optional): ((raw_rds_password))
+#. rds_password (optional): ((custom_rds_password))
 #+ Password used for your rds (grafana) if needed
-rds_password: ((raw_rds_password))
+rds_password: ((custom_rds_password))
 
 
 #
 # Ansible
 #
 
-#. ansible_vault_password (required): ((raw_ansible_vault_password))
+#. ansible_vault_password (required): ((custom_ansible_vault_password))
 #+ Password used by ansible vault to decrypt your vaulted files.
-ansible_vault_password: ((raw_ansible_vault_password))
+ansible_vault_password: ((custom_ansible_vault_password))
 
 #. bastion_url (required): user@bastion.server.com
 #+ bastion URL used by ansible to connect on AWS EC2 instances.
@@ -41,9 +41,9 @@ bastion_url: user@bastion.server.com
 #+ bastion SSH private key used by ansible to connect on AWS EC2 instances and the bastion itself.
 bastion_private_key_pair: ((ssh_bastion.ssh_key))
 
-#. grafana_admin_password: "((raw_grafana_admin_password))"
+#. grafana_admin_password: "((custom_grafana_admin_password))"
 #+ Define Grafana admin account password
-grafana_admin_password: "((raw_grafana_admin_password))"
+grafana_admin_password: "((custom_grafana_admin_password))"
 
 
 #
@@ -58,9 +58,9 @@ config_git_repository: git@github.com:MyUser/config-prometheus.git
 #+ Branch of the config Git repository.
 config_git_branch: master
 
-#. config_git_private_key (required): ((git_config.ssh_key))
+#. config_git_private_key (required): ((ssh_config.ssh_key))
 #+ SSH key pair to fetch the config Git repository.
-config_git_private_key: ((git_config.ssh_key))
+config_git_private_key: ((ssh_config.ssh_key))
 
 
 #
