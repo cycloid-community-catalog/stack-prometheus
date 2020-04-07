@@ -29,7 +29,7 @@ molecule_env_vars:
 
 #. terraform_version (required): latest
 #+ terraform version to validate the stack.
-terraform_version: latest
+terraform_version: 0.12.6
 
 #. terraform_env_vars (required): dict
 #+ terraform configuration to validate the stack.
