@@ -22,7 +22,7 @@ shared:
         type: docker-image
         source:
           repository: cycloid/cycloid-toolkit
-          tag: latest
+          tag: v2.7
       run:
         path: /usr/bin/ansible-runner
       caches:
