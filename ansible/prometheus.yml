@@ -31,6 +31,10 @@
   roles:
     # Install docker
     - role: geerlingguy.docker
+      docker_packages:
+        - "docker-{{ docker_edition }}"
+        - "docker-{{ docker_edition }}-cli"
+        - "containerd.io"
       tags:
         - docker
 
