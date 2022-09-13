@@ -96,6 +96,20 @@ default:
         type: string
         default: "2.9"
   terraform:
+    ec2-ami:
+      - name: "EC2 AMI name"
+        description: "The AMI name to use  for the EC2 machine to launch. You can use a regex like debian-11-*."
+        key: debian_ami_name
+        widget: simple_text
+        type: string
+        default: "debian-11-*"
+      - name: "EC2 AMI owner"
+        description: "The name or ID of the owner of the AMI to use"
+        key: debian_ami_name
+        widget: simple_text
+        type: string
+        default: "136693071363"
+
     application:
       - name: "Extra AWS tags"
         description: "Dict of extra tags to add on aws resources."
