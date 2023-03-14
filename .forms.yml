@@ -62,7 +62,7 @@ default:
       - name: "Config repository"
         key: config_git_repository
         type: string
-        widget: simple_text
+        widget: cy_crs
         description: "Git repository URL containing the config of the stack."
         default: "git@github.com:MyUser/config.git"
         required: true
@@ -76,7 +76,8 @@ default:
       - name: "Config branch"
         description: "Branch of the config Git repository."
         key: config_git_branch
-        widget: simple_text
+        widget: cy_branch
+        source: config_git_repository
         type: string
         description: "The branch used by the config repository"
         default: "config"
