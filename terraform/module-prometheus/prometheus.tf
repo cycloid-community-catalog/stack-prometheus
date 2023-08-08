@@ -108,7 +108,7 @@ resource "aws_instance" "prometheus" {
 
 resource "aws_eip" "prometheus" {
   instance = aws_instance.prometheus.id
-  vpc      = true
+  domain   = "vpc"
   count    = var.prometheus_enable_eip ? 1 : 0
 }
 
