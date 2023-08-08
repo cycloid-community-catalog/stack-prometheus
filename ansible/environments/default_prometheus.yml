@@ -568,7 +568,7 @@ nginx_sites_default:
       }
 
   07-grafana-80:
-    - listen 80 default_server
+    - listen 80
     - server_name {{ grafana_domain_name }}
     # - auth_basic            "Restricted"
     # - auth_basic_user_file  auth_basic/grafana
