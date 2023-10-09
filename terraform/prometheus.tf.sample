@@ -10,6 +10,14 @@ module "prometheus" {
 
   #####################################
 
+  #. debian_ami_name (optional):
+  #+ The debian name to use. You can use a regex like debian-11-*.
+  debian_ami_name = "debian-11-*"
+
+  #. debian_ami_owner (optional):
+  #+ The name or ID of the owner of the image to use.
+  debian_ami_owner = "136693071363"
+
   #. vpc_id (required):
   #+ Amazon VPC id on which create each components.
   vpc_id = data.terraform_remote_state.infrastructure.outputs.infra_vpc_id

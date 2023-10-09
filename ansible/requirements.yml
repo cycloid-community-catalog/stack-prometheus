@@ -5,7 +5,7 @@
   scm: git
 
 - src: https://github.com/cycloidio/ansible-prometheus.git
-  version: master
+  version: fix_jinja_indent
   name: cycloid.prometheus
   scm: git
 
