@@ -12,7 +12,11 @@
     - "environments/{{env}}-prometheus.yml"
 
   pre_tasks:
-
+    # Fix native debian 10 issue with signing key
+    - name: Update cache
+      apt:
+        update_cache: true
+        
     - name: "Create SSL directory"
       file:
         path: "{{ certificates_dest }}"
