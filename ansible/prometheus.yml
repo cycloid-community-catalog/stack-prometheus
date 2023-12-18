@@ -6,7 +6,10 @@
 - hosts: tag_role_prometheus:&tag_project_{{project}}:&tag_cycloid_io_true:&tag_env_{{ env }}
   become: yes
   serial: 50%
-
+  
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    
   vars_files:
     - "environments/default_prometheus.yml"
     - "environments/{{env}}-prometheus.yml"
