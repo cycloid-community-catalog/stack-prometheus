@@ -49,6 +49,7 @@
 
     # Monitoring client part
     - role: cycloid.telegraf
+      ansible_check_mode: true
       tags:
         - telegraf
 
