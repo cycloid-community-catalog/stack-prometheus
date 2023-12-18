@@ -16,7 +16,7 @@
   
 # Temporary check ansible upgrade
 - src: https://github.com/dj-wasabi/ansible-telegraf
-  version: 0.14.0
+  version: master
   name: dj-wasabi.telegraf
   scm: git
 
