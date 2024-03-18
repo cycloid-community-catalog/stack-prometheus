@@ -10,12 +10,12 @@
   scm: git
 
 - src: https://github.com/cycloidio/ansible-telegraf.git
-  version: 0.14.0
+  version: master
   name: cycloid.telegraf
   scm: git
 
 - src: https://github.com/dj-wasabi/ansible-telegraf
-  version: master
+  version: 0.14.0
   name: dj-wasabi.telegraf
   scm: git
 
