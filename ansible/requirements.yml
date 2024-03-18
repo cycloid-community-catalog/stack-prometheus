@@ -10,7 +10,7 @@
   scm: git
 
 - src: https://github.com/cycloidio/ansible-telegraf.git
-  version: master
+  version: 0.14.0
   name: cycloid.telegraf
   scm: git
 
