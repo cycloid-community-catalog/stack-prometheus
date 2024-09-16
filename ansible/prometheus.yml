@@ -31,6 +31,10 @@
   roles:
     # Install docker
     - role: geerlingguy.docker
+      docker_packages:
+        - "docker-{{ docker_edition }}"
+        - "docker-{{ docker_edition }}-cli"
+        - "containerd.io"
       tags:
         - docker
 
@@ -42,6 +46,20 @@
 
     # Monitoring client part
     - role: cycloid.telegraf
+      telegraf_agent_version: 1.10.0
+      telegraf_plugins_default:
+        - plugin: cpu
+          config:
+            - percpu = true
+        - plugin: disk
+        - plugin: diskio
+        - plugin: mem
+        - plugin: net
+        - plugin: system
+        - plugin: swap
+        - plugin: netstat
+        - plugin: processes
+        - plugin: kernel
       tags:
         - telegraf
 

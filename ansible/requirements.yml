@@ -5,7 +5,7 @@
   scm: git
 
 - src: https://github.com/cycloidio/ansible-prometheus.git
-  version: master
+  version: fix_jinja_indent
   name: cycloid.prometheus
   scm: git
 
@@ -15,7 +15,7 @@
   scm: git
 
 - src: https://github.com/dj-wasabi/ansible-telegraf
-  version: master
+  version: 0.14.0
   name: dj-wasabi.telegraf
   scm: git
 
