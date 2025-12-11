@@ -78,7 +78,6 @@ default:
         key: config_git_branch
         widget: cy_branch
         type: string
-        description: "The branch used by the config repository"
         source: config_git_repository
         default: "config"
         required: true
