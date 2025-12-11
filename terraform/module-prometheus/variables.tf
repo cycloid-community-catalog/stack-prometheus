@@ -79,7 +79,7 @@ locals {
 ###
 
 variable "debian_ami_name" {
-  default = "debian-stretch-*"
+  default = "debian-12-*"
 }
 
 variable "prometheus_disk_size" {

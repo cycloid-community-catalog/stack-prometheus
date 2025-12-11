@@ -33,7 +33,7 @@ output "rds_port" {
 }
 
 output "rds_database" {
-  value = var.create_rds_database ? aws_db_instance.grafana[0].name : ""
+  value = var.create_rds_database ? aws_db_instance.grafana[0].db_name : ""
 }
 
 output "rds_username" {
